@@ -17,17 +17,15 @@
 </head>
 <body>
 
-   <h4>Web socket demo</h4>
-  Your Message: <input id="input"></input>
-  <div id="status"></div>
-  <br></br>
+
   
   <div class="container">
     
     <div class="row">
       <div class="col-12">
         <h1>Lobby</h1> 
-        
+         <div id="new_players"></div>
+          <br></br>
     </div>
   </div>
   <script>
@@ -44,22 +42,12 @@
         // Establish websocket connection
         var socket = new WebSocket("wss://ws-server-template.debbiew27.repl.co", "very-good-protocol");
         
-        socket.onopen = function() {
-          $("#status").append("[open] websocket connection opened")
-          $("#status").append($("<br>"));
-        }
-        
         socket.onmessage = function(message){
           // Receive a message from websocket server
           // Admin: Map ID to name & assigned questions and answers,
             // Ignore if phone
-          $("#status").append(`[receive] ${message.data}`);
-          $("#status").append($("<br>"));
-        }
-        
-        socket.onclose = function(){
-          $("#status").append("[close] websocket connection closed");
-          $("#status").append($("<br>"));
+          $("#new_players").append(`[receive] ${message.data}`);
+          $("#new_players").append($("<br>"));
         }
         
         // Event listeners

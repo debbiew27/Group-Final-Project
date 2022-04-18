@@ -47,11 +47,11 @@
         }
                 
         // Event listeners
-        $('#input').on("keypress", function(event){
+        $('#userName').on("keypress", function(event){
           if (event.key === "Enter") {
         
               // Send a message from this browser window
-              socket.send($('#input').val());
+              socket.send($('#userName').val());
 
             // TODO: transition to survey, send survey results
             // 
