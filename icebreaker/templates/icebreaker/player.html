@@ -21,8 +21,12 @@
     
     <div class="row">
       <div class="col-12">
+        <h1>Enter Lobby Code</h1> 
+        <input id="lobbyCode"></input>
         <h1>Enter Your Name</h1> 
         <input id="userName"></input>
+         <button id="connectButton"> Connect To Server</button>
+        
     </div>
   </div>
   <script>
@@ -30,42 +34,26 @@
 
       // start websocket listener
       // if admin, listen for new connections and remember them
-      // if player, 
 
-      // TODO: CHANGE
-      function basicWebsocketChat(){
-        
+      $('#connectButton').on("click", function(event){
+        console.log("clicked")
         // Establish websocket connection
         var socket = new WebSocket("wss://ws-server-template.debbiew27.repl.co", "very-good-protocol");
         
         socket.onmessage = function(message){
           // Receive a message from websocket server
 
-          // Receive questions/answers from server
-          $("#status").append(`[receive] ${message.data}`);
-          $("#status").append($("<br>"));
+          // TODO Receive questions/answers from server
+          
         }
-                
-        // Event listeners
-        $('#userName').on("keypress", function(event){
-          if (event.key === "Enter") {
-        
-              // Send a message from this browser window
-              socket.send($('#userName').val());
 
-            // TODO: transition to survey, send survey results
-            // 
-          }
+        socket.addEventListener('open', function (event) {
+            socket.send('Hello Server!');
+            socket.send("U"+$('#userName').val());
         });
-      }
-
-      
-      function init(){
-        // TODO
-        basicWebsocketChat(); 
-      }
-
-      init();
+        
+        
+      })
   }
 
 </script>

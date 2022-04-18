@@ -36,31 +36,24 @@
       // if player, 
 
       // TODO: CHANGE
+      const userData = new Map();
       function basicWebsocketChat(){
-          // The p4 starter code below is based on @MrEconomical (https://replit.com/@MrEconomical)'s ws-server-template example
-        
+        // Receive a message from websocket server
+        // Admin: Map ID to name & assigned questions and answers,
         // Establish websocket connection
+        
         var socket = new WebSocket("wss://ws-server-template.debbiew27.repl.co", "very-good-protocol");
-        
-        socket.onmessage = function(message){
-          // Receive a message from websocket server
-          // Admin: Map ID to name & assigned questions and answers,
-            // Ignore if phone
-          $("#new_players").append(`[receive] ${message.data}`);
+        socket.onmessage = function(message) {
+          let splitIndex = message.data.indexOf("___")
+          let username = meessage.data.slice(0,splitIndex)
+          let userHash = message.data.slice(splitIndex+3)
+          userData.set(userHash, [username])
+          
+          
+          $("#new_players").append(`${username}`);
           $("#new_players").append($("<br>"));
+          
         }
-        
-        // Event listeners
-        $('#input').on("keypress", function(event){
-          if (event.key === "Enter") {
-        
-              // Send a message from this browser window
-              socket.send($('#input').val());
-              $("#status").append(`[send] ${$('#input').val()}`);
-              $("#status").append($("<br>"));
-              $('#input').val("");
-          }
-        });
       }
 
       
