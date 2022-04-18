@@ -1,0 +1,88 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <title>Final Project: Implementation Prototype</title>
+	<script type="text/javascript" src="{% static 'coloring/vendors/jquery/jquery-3.3.1.min.js' %}"></script>
+  <link href="{% static 'coloring/vendors/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" type="text/css" />
+  
+  <style type="text/css">
+    #myCanvas {
+      border: 1px solid black;
+    }
+  </style>
+  
+</head>
+<body>
+
+   <h4>Web socket demo</h4>
+  Your Message: <input id="input"></input>
+  <div id="status"></div>
+  <br></br>
+  
+  <div class="container">
+    
+    <div class="row">
+      <div class="col-12">
+        <h1>Lobby</h1> 
+        
+    </div>
+  </div>
+  <script>
+    // Need pages for 
+    window.onload = function() {
+
+      // start websocket listener
+      // if admin, listen for new connections and remember them
+      // if player, 
+
+      // TODO: CHANGE
+      function basicWebsocketChat(){
+          // The p4 starter code below is based on @MrEconomical (https://replit.com/@MrEconomical)'s ws-server-template example
+        
+        // Establish websocket connection
+        var socket = new WebSocket("wss://ws-server-template.debbiew27.repl.co", "very-good-protocol");
+        
+        socket.onopen = function(){
+          $("#status").append("[open] websocket connection opened")
+          $("#status").append($("<br>"));
+        }
+        
+        socket.onmessage = function(message){
+          // Receive a message from websocket server
+          $("#status").append(`[receive] ${message.data}`);
+          $("#status").append($("<br>"));
+        }
+        
+        socket.onclose = function(){
+          $("#status").append("[close] websocket connection closed");
+          $("#status").append($("<br>"));
+        }
+        
+        // Event listeners
+        $('#input').on("keypress", function(event){
+          if (event.key === "Enter") {
+        
+              // Send a message from this browser window
+              socket.send($('#input').val());
+              $("#status").append(`[send] ${$('#input').val()}`);
+              $("#status").append($("<br>"));
+              $('#input').val("");
+          }
+        });
+      }
+
+      
+      function init(){
+        // TODO
+        basicWebsocketChat(); 
+      }
+
+      init();
+  }
+
+</script>
+</body>
+</html>
