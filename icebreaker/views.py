@@ -48,8 +48,15 @@ def add_player(request, username="DefaultUsername"):
     # fetch all of the players in one go, to be used when running the game
     all_players = []
     try:
-      all_players = Player.__class__.objects.all()
+      for player in Player.objects.all():
+        new_dict = {"username": player.username,
+                   "userhash": player.userhash,
+                   "question": player.question.question,
+                   "answer": player.answer}
+        
+        all_players.append(new_dict)
     except:
+      print("ERROR! NO PLAYERS IN THE DATABASE")
       pass
     return JsonResponse({
       "players": all_players
