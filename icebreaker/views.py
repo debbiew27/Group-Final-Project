@@ -1,13 +1,14 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.http import JsonResponse
 from icebreaker.models import *
-
+from django.views.decorators.csrf import csrf_exempt
 import json
 
 def server(request):
-  # clear entire database first
+  # clear entire database first with questions?
   # then populate here
-  
+  populate_database()
   return render(request, 'icebreaker/server.html')
 
 def player(request):
@@ -15,6 +16,44 @@ def player(request):
   
 def index(request):
   return render(request, 'icebreaker/index.html')
+
+@csrf_exempt
+def add_player(request, username="DefaultUsername"):
+  if request.POST:
+    # create new player object in the database
+    print("Received POST request with data:")
+    data = json.loads(request.body.decode('UTF-8'))
+    print(data)
+    if(not Player.objects.filter(username=data["username"]).exists()):
+      # New player to add
+      if(Question.objects.filter(topic = data["topic"]).exists()):
+        # TODO maybe make random later
+        print('adding question of type: ', data["topic"])
+        query = Question.objects.filter(topic = data["topic"], used=False).last() 
+        print("question: ", query.question)
+        query.used = True
+        query.save()
+        new_player = Player(username=data["username"], userhash=data["userhash"], question=query, answer="") 
+        new_player.save()
+    else:
+      print("DO NOT PRINT YET UNTIL ANSWERING IMPL")
+      # fetch player object and fill in their answer to the question
+      if(Player.objects.filter(username=data["username"]).exists()):
+        query = Player.objects.filter(username=data["username"]).last()
+        query.answer = data["answer"]
+        query.save()
+    return HttpResponse(True)
+  else:
+    # GET request
+    # fetch all of the players in one go, to be used when running the game
+    all_players = []
+    try:
+      all_players = Player.__class__.objects.all()
+    except:
+      pass
+    return JsonResponse({
+      "players": all_players
+    })
 
 # icebreaker/animalQuestion
 # Question -> JSON (Question: Do you like cats)
@@ -36,6 +75,7 @@ def question(request):
 
 def populate_database():
   # Food 
+  print("Populating Question")
   Question(topic="Food",question="If you could eat anything in the world right now what would it be?",used=False).save()
   Question(topic="Food",question="What’s your favorite cuisine/restaurant?",used=False).save()
   Question(topic="Food",question="What would your last meal be?",used=False).save()

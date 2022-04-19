@@ -76,18 +76,15 @@
       })
 
       $('#food').on("click", function(event){
-          socket.send('Hello Server!');
-          socket.send("U"+$('#userName').val() + "_food");
+          socket.send("U"+$('#userName').val() + "_Food");
       })
       
       $('#animal').on("click", function(event){
-        socket.send('Hello Server!');
-        socket.send("U"+$('#userName').val() + "_animal");
+        socket.send("U"+$('#userName').val() + "_Animal");
       })
       
       $('#travel').on("click", function(event){
-          socket.send('Hello Server!');
-          socket.send("U"+$('#userName').val() + "_travel");
+          socket.send("U"+$('#userName').val() + "_Travel");
       })
       
   }

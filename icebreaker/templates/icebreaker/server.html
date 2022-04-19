@@ -56,6 +56,8 @@
           let username = userData[0]
           let topic = userData[1]
           let userhash = userData[2]
+
+          console.log(message.data)
           
           // userData.set(userHash, [username])          
 
@@ -65,17 +67,19 @@
             "topic": topic
           };
           console.log(username, topic, userhash)
-          // This ajax request sends a POST request to the server
+          //This ajax request sends a POST request to the server
           
-          // $.ajax({
-          //   type: "POST",
-          //   url: "/icebreaker/player/",
-          //   data: JSON.stringify(data_to_send),
-          //   success: function (response) {
-          //     // prints the response from the server
-          //     console.log(response); 
-          //   }
-          // });
+          $.ajax({
+            type: "POST",
+            url: "/icebreaker/"+ username + "/",
+            data: JSON.stringify(data_to_send),
+            success: function (response) {
+              // prints the response from the server
+              console.log(response); 
+              
+            }
+          });
+
           
           $("#new_players").append(`${username}`);
           $("#new_players").append($("<br>"));
