@@ -36,7 +36,7 @@
         <button id="food" type="button" class="btn btn-default">Food</button>
       </div>
       <div class="col-4">
-        <button id="animal" type="button" class="btn btn-default">Animal</button>
+        <button id="animals" type="button" class="btn btn-default">Animals</button>
       </div>
       <div class="col-4">
         <button id="travel" type="button" class="btn btn-default">Travel</button>
@@ -79,8 +79,8 @@
           socket.send("U"+$('#userName').val() + "_Food");
       })
       
-      $('#animal').on("click", function(event){
-        socket.send("U"+$('#userName').val() + "_Animal");
+      $('#animals').on("click", function(event){
+        socket.send("U"+$('#userName').val() + "_Animals");
       })
       
       $('#travel').on("click", function(event){
