@@ -17,43 +17,79 @@
 </head>
 <body>
 
-  <div class="container">
-    
-    <div class="row">
-      <div class="col-12">
-        <h1>Enter Lobby Code</h1> 
-        <input id="lobbyCode"></input>
-        <h1>Enter Your Name</h1> 
-        <input id="userName"></input>
-         <button id="connectButton"> Connect To Server</button>
-        
+  <div id= "lobby" class="container">
+      <div class="row">
+        <div class="col-12">
+          <h1>Enter Lobby Code</h1> 
+          <input id="lobbyCode"></input>
+          <h1>Enter Your Name</h1> 
+          <input id="userName"></input>
+          <button id="goToSurvey"> Submit </button>
+      </div>
     </div>
   </div>
+  
+  <div id = "survey" class="container">
+    <h1 style= "text-align: center"> Choose a Topic! </h1>
+    <div class="row text-center">
+      <div class="col-4">
+        <button id="food" type="button" class="btn btn-default">Food</button>
+      </div>
+      <div class="col-4">
+        <button id="animal" type="button" class="btn btn-default">Animal</button>
+      </div>
+      <div class="col-4">
+        <button id="travel" type="button" class="btn btn-default">Travel</button>
+      </div>
+    </div>
+</div>
   <script>
     window.onload = function() {
-
-      // start websocket listener
-      // if admin, listen for new connections and remember them
-
-      $('#connectButton').on("click", function(event){
-        console.log("clicked")
-        // Establish websocket connection
-        var socket = new WebSocket("wss://ws-server-template.debbiew27.repl.co", "very-good-protocol");
+      // On load, hide the survey menu
+      // unhide survey menu when they click submit
+      let surveyElement = document.getElementById("survey");
+      surveyElement.style.display = 'none';  
+      var socket;
+      
+      $('#goToSurvey').on("click", function(event){
+        console.log("clicked goToSurvey")
+        let lobby = document.getElementById('lobby');
+        lobby.style.display = 'none';
+         surveyElement.style.display = 'block';
         
-        socket.onmessage = function(message){
-          // Receive a message from websocket server
+        // Establish websocket connection
+        socket = new WebSocket("wss://ws-server-template.debbiew27.repl.co", "very-good-protocol");
+        
+        // socket.onmessage = function(message){
+        //   // Receive a message from websocket server
 
-          // TODO Receive questions/answers from server
+        //   // TODO Receive questions/answers from server
           
-        }
+        // }
 
         socket.addEventListener('open', function (event) {
-            socket.send('Hello Server!');
-            socket.send("U"+$('#userName').val());
+          // socket.send('Hello Server!');
+          // socket.send("U"+$('#userName').val());
+          console.log("Socket to server opened")
+          // only send username and other info once you finish the survey
         });
-        
-        
       })
+
+      $('#food').on("click", function(event){
+          socket.send('Hello Server!');
+          socket.send("U"+$('#userName').val() + "_food");
+      })
+      
+      $('#animal').on("click", function(event){
+        socket.send('Hello Server!');
+        socket.send("U"+$('#userName').val() + "_animal");
+      })
+      
+      $('#travel').on("click", function(event){
+          socket.send('Hello Server!');
+          socket.send("U"+$('#userName').val() + "_travel");
+      })
+      
   }
 
 </script>

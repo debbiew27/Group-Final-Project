@@ -1,8 +1,13 @@
 from django.db import models
 
-# The Author model has been created for you
-class Author(models.Model):
-  name = models.CharField(max_length=50)
+# Question model
+class Question(models.Model):
+  topic = models.CharField(max_length=50) # "Animals", "Food", "Travel"
+  question = models.CharField(max_length=200)
+  used = models.BooleanField(default=False)
 
-# Create the Drawing model
-
+class Player(models.Model):
+  username = models.CharField(max_length=50)
+  userhash = models.CharField(max_length=50)
+  question = models.ForeignKey(Question, on_delete=models.CASCADE, null=True)
+  answer = models.TextField()

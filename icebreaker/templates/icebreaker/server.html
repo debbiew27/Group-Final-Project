@@ -26,17 +26,25 @@
         <h1>Lobby</h1> 
          <div id="new_players"></div>
           <br></br>
+        
+        <button id="startGame"> Start Game</button>
     </div>
   </div>
   <script>
     window.onload = function() {
 
-      // start websocket listener
-      // if admin, listen for new connections and remember them
-      // if player, 
+      $('#startGame').on("click", function(event){
+        console.log("clicked Start game")
+        // Display "Answer survey on your phone!"
+        
+        // give the players their surveys
+        
+      })
+      
+      
 
       // TODO: CHANGE
-      const userData = new Map();
+      // const userData = new Map();
       function basicWebsocketChat(){
         // Receive a message from websocket server
         // Admin: Map ID to name & assigned questions and answers,
@@ -44,11 +52,30 @@
         
         var socket = new WebSocket("wss://ws-server-template.debbiew27.repl.co", "very-good-protocol");
         socket.onmessage = function(message) {
-          let splitIndex = message.data.indexOf("___")
-          let username = meessage.data.slice(0,splitIndex)
-          let userHash = message.data.slice(splitIndex+3)
-          userData.set(userHash, [username])
+          let userData = message.data.split('_')
+          let username = userData[0]
+          let topic = userData[1]
+          let userhash = userData[2]
           
+          // userData.set(userHash, [username])          
+
+          var data_to_send = {
+            "username": username,
+            "userhash": userhash,
+            "topic": topic
+          };
+          console.log(username, topic, userhash)
+          // This ajax request sends a POST request to the server
+          
+          // $.ajax({
+          //   type: "POST",
+          //   url: "/icebreaker/player/",
+          //   data: JSON.stringify(data_to_send),
+          //   success: function (response) {
+          //     // prints the response from the server
+          //     console.log(response); 
+          //   }
+          // });
           
           $("#new_players").append(`${username}`);
           $("#new_players").append($("<br>"));
