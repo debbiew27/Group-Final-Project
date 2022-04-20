@@ -30,6 +30,7 @@ def add_player(request, username="DefaultUsername"):
     print(data)
     if(not Player.objects.filter(username=data["username"]).exists()):
       # New player to add
+      print("within username check. if nothing else prints, check if questions were initialized")
       if(Question.objects.filter(topic = data["topic"]).exists()):
         # TODO maybe make random later
         print('adding question of type: ', data["topic"])

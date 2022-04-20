@@ -8,14 +8,30 @@
 	<script type="text/javascript" src="{% static 'coloring/vendors/jquery/jquery-3.3.1.min.js' %}"></script>
   <link href="{% static 'coloring/vendors/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" type="text/css" />
   
-  <style type="text/css">
+  <style>
     #myCanvas {
       border: 1px solid black;
     }
-  </style>
+
+    .food{
+      display: block;
+      color: red;
+    }
+    
+    .animals {
+      display: block;
+    }
+    
+    .travel {
+      display: block;
+    }
+
+    
+
+</style>
   
 </head>
-<body>
+<body style = "background-color: #E4DFDA">
 
   <div id= "lobby" class="container">
       <div class="row">
@@ -29,19 +45,15 @@
     </div>
   </div>
   
-  <div id = "survey" class="container">
+  <div id = "survey">
     <h1 style= "text-align: center"> Choose a Topic! </h1>
-    <div class="row text-center">
-      <div class="col-4">
-        <button id="food" type="button" class="btn btn-default">Food</button>
-      </div>
-      <div class="col-4">
-        <button id="animals" type="button" class="btn btn-default">Animals</button>
-      </div>
-      <div class="col-4">
-        <button id="travel" type="button" class="btn btn-default">Travel</button>
-      </div>
-    </div>
+        <p> <button style = "width: 100%; height: 25vh"id="food" type="button" class="btn btn-default">Food</button> </p>
+
+      <p> <button style = "width: 100%; height: 25vh" id="animals" type="button" class="btn btn-default">Animals</button></p>
+
+      <p>
+        <button style = "width:100%; height: 25vh" id="travel" type="button" class="btn btn-default">Travel</button>
+      </p>
 </div>
 
 <div id = "questions" class="container">
@@ -53,7 +65,9 @@
     </div>
 </div>
 
-
+<div id = "waitGameStart" class="container">
+    <h1 style= "text-align: center"> Thank you for your answer! Waiting for the game to start.</h1>
+</div>
 
   
   <script>
@@ -63,7 +77,9 @@
       let surveyElement = document.getElementById("survey");
       surveyElement.style.display = 'none';  
       let questionsElement = document.getElementById("questions");
-      questionsElement.style.display = 'none';  
+      questionsElement.style.display = 'none';
+      document.getElementById("waitGameStart").style.display = 'none';  
+      
       var socket;
       var username;
       
@@ -74,13 +90,6 @@
         surveyElement.style.display = 'block';
         // Establish websocket connection
         socket = new WebSocket("wss://ws-server-template.debbiew27.repl.co", "very-good-protocol");
-        
-        // socket.onmessage = function(message){
-        //   // Receive a message from websocket server
-
-        //   // TODO Receive questions/answers from server
-          
-        // }
 
         socket.addEventListener('open', function (event) {
           console.log("Socket to server opened")
@@ -118,14 +127,18 @@
           "username" : $('#userName').val(),
           "answer": $('#answer').val()
         }
-         $.ajax({
-            type: "POST",
-            url: "/icebreaker/"+ username + "/",
-            data: JSON.stringify(data_to_send),
-            success: function (response) {
-              
-            }
-          });
+        
+        $.ajax({
+          type: "POST",
+          url: "/icebreaker/"+ username + "/",
+          data: JSON.stringify(data_to_send),
+          success: function (response) {
+            console.log(response)
+            document.getElementById('questions').style.display = 'none';
+            document.getElementById('waitGameStart').style.display = 'block';
+          }
+        });
+        
       })
 
       function updateQuestion(username) {

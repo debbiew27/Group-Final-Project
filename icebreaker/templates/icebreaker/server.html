@@ -32,20 +32,33 @@
   </div>
   <script>
     window.onload = function() {
-
+      const userMap = new Map()
       $('#startGame').on("click", function(event){
         console.log("clicked Start game")
         // Display "Answer survey on your phone!"
+        $.ajax({
+            type: "GET",
+            url: "/icebreaker/default",
+            success: populateUsers
+        })
         
         // give the players their surveys
         
       })
       
+      function populateUsers(response) {
+        console.log("epic")
+        var all_players = response["players"]
+        for(var j = 0; j < all_players.length; j++) {
+          let current = all_players[j.toString()];
+          userMap.set(current["userhash"], current);
+        } 
+        console.log("USERS: ", userMap)
+      }
       
-
       // TODO: CHANGE
       // const userData = new Map();
-      function basicWebsocketChat(){
+      function runServer(){
         // Receive a message from websocket server
         // Admin: Map ID to name & assigned questions and answers,
         // Establish websocket connection
@@ -90,7 +103,7 @@
       
       function init(){
         // TODO
-        basicWebsocketChat(); 
+        runServer(); 
       }
 
       init();

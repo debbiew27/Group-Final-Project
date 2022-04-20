@@ -1,0 +1,18 @@
+.food{
+  display: block;
+  color: red;
+}
+
+.animals {
+  display: block;
+}
+
+.travel {
+  display: block;
+}
+
+#food {
+  display: block;
+  color: red;
+}
+    
