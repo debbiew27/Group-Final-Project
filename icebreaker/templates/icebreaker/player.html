@@ -48,9 +48,14 @@
     <h1 style= "text-align: center"> Answer your Questions! </h1>
     <div class="row text-center">
       <div id = "question"></div>
-      <input id="questionTextBox"></input>
+      <input id="answer"></input>
+      <button id="submitAnswer" type="button" class="btn btn-default">Done</button>
     </div>
 </div>
+
+
+
+  
   <script>
     window.onload = function() {
       // On load, hide the survey menu
@@ -78,8 +83,6 @@
         // }
 
         socket.addEventListener('open', function (event) {
-          // socket.send('Hello Server!');
-          // socket.send("U"+$('#userName').val());
           console.log("Socket to server opened")
           // only send username and other info once you finish the survey
         });
@@ -90,7 +93,42 @@
         socket.send("U"+ username + "_Food");
         surveyElement.style.display = 'none';
         questionsElement.style.display = 'block';
+        updateQuestion(username);
+      })
+      
+      $('#animals').on("click", function(event) {
+        username = $('#userName').val()
+        socket.send("U"+$('#userName').val() + "_Animals");
+        surveyElement.style.display = 'none';  
+        questionsElement.style.display = 'block';
+        updateQuestion(username)
+    
+      })
+      
+      $('#travel').on("click", function(event) {
+        username = $('#userName').val()
+        socket.send("U"+$('#userName').val() + "_Travel");
+        surveyElement.style.display = 'none'; 
+        questionsElement.style.display = 'block';  
+        updateQuestion(username)
+      })
 
+      $('#submitAnswer').on("click", function(event) {
+        var data_to_send = {
+          "username" : $('#userName').val(),
+          "answer": $('#answer').val()
+        }
+         $.ajax({
+            type: "POST",
+            url: "/icebreaker/"+ username + "/",
+            data: JSON.stringify(data_to_send),
+            success: function (response) {
+              
+            }
+          });
+      })
+
+      function updateQuestion(username) {
         for(var i = 0; i < 3; i++) {
           $.ajax({
             type: "GET",
@@ -109,24 +147,8 @@
             }
           });
         }
-      })
-      
-      $('#animals').on("click", function(event) {
-        username = $('#userName').val()
-        socket.send("U"+$('#userName').val() + "_Animals");
-        surveyElement.style.display = 'none';  
-        questionsElement.style.display = 'block';  
-      })
-      
-      $('#travel').on("click", function(event) {
-        username = $('#userName').val()
-        socket.send("U"+$('#userName').val() + "_Travel");
-        surveyElement.style.display = 'none'; 
-        questionsElement.style.display = 'block';  
-      })
-      
-      
-      
+        
+      }
   }
 
 </script>

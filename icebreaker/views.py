@@ -40,7 +40,7 @@ def add_player(request, username="DefaultUsername"):
         new_player = Player(username=data["username"], userhash=data["userhash"], question=query, answer="") 
         new_player.save()
     else:
-      print("DO NOT PRINT YET UNTIL ANSWERING IMPL")
+      print("POPULATING ANSWER FOR ", data["username"])
       # fetch player object and fill in their answer to the question
       if(Player.objects.filter(username=data["username"]).exists()):
         query = Player.objects.filter(username=data["username"]).last()
