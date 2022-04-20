@@ -5,10 +5,14 @@ from icebreaker.models import *
 from django.views.decorators.csrf import csrf_exempt
 import json
 
+populate = False
 def server(request):
+  global populate
   # clear entire database first with questions?
   # then populate here
-  populate_database()
+  if(not populate):
+    populate_database()
+    populate = True
   return render(request, 'icebreaker/server.html')
 
 def player(request):

@@ -43,20 +43,30 @@
       </div>
     </div>
 </div>
+
+<div id = "questions" class="container">
+    <h1 style= "text-align: center"> Answer your Questions! </h1>
+    <div class="row text-center">
+      <div id = "question"></div>
+      <input id="questionTextBox"></input>
+    </div>
+</div>
   <script>
     window.onload = function() {
       // On load, hide the survey menu
       // unhide survey menu when they click submit
       let surveyElement = document.getElementById("survey");
       surveyElement.style.display = 'none';  
+      let questionsElement = document.getElementById("questions");
+      questionsElement.style.display = 'none';  
       var socket;
+      var username;
       
-      $('#goToSurvey').on("click", function(event){
+      $('#goToSurvey').on("click", function(event) {
         console.log("clicked goToSurvey")
         let lobby = document.getElementById('lobby');
         lobby.style.display = 'none';
-         surveyElement.style.display = 'block';
-        
+        surveyElement.style.display = 'block';
         // Establish websocket connection
         socket = new WebSocket("wss://ws-server-template.debbiew27.repl.co", "very-good-protocol");
         
@@ -75,17 +85,47 @@
         });
       })
 
-      $('#food').on("click", function(event){
-          socket.send("U"+$('#userName').val() + "_Food");
+      $('#food').on("click", function(event) {
+        username = $('#userName').val();
+        socket.send("U"+ username + "_Food");
+        surveyElement.style.display = 'none';
+        questionsElement.style.display = 'block';
+
+        for(var i = 0; i < 3; i++) {
+          $.ajax({
+            type: "GET",
+            url: "/icebreaker/"+ username + "/",
+            success: function (response) {
+              var all_players = response["players"]
+              for(var j = 0; j < all_players.length; j++) {
+                let current = all_players[j.toString()]["username"];
+                if(current === username) {
+                  console.log("FOUND PERSON")
+                  var question = (all_players[j]["question"])
+                  document.getElementById('question').textContent = question;
+                  break;
+                }
+              } 
+            }
+          });
+        }
       })
       
-      $('#animals').on("click", function(event){
+      $('#animals').on("click", function(event) {
+        username = $('#userName').val()
         socket.send("U"+$('#userName').val() + "_Animals");
+        surveyElement.style.display = 'none';  
+        questionsElement.style.display = 'block';  
       })
       
-      $('#travel').on("click", function(event){
-          socket.send("U"+$('#userName').val() + "_Travel");
+      $('#travel').on("click", function(event) {
+        username = $('#userName').val()
+        socket.send("U"+$('#userName').val() + "_Travel");
+        surveyElement.style.display = 'none'; 
+        questionsElement.style.display = 'block';  
       })
+      
+      
       
   }
 
