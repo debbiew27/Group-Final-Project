@@ -5,18 +5,30 @@
   --game-bg: #4281A4;
 }
 
-/* Index.html */
+/* ********** Index.html ********** */
 .landing {
   background-color: var(--main-pg-bg);
 }
 
 .bold-btn {
-  --button-color: #C1666B;
+  background-color: var(--button-color);
+  color: white;
   font-family: 'Roboto';
   font-style: italic;
+  font-weight: bolder;
 }
 
-/* Player.html */
+.landing-btn {
+  width: 25vw;
+  height: 10vh;
+  font-size: 2vw;
+  justify-content: center;
+  align-items: center;
+}
+/* ******************************** */
+
+
+/* ********* Player.html ********** */
 #myCanvas {
   border: 1px solid black;
 }
@@ -92,8 +104,10 @@
 #chooseTopicText{
   font-size: 8em;
 }
+/* ******************************** */
 
-/* Server.html */
+
+/* ********* Server.html ********** */
 body {
   background-color: var(--main-pg-bg);
 }
@@ -112,3 +126,4 @@ body {
 #new_players{
   display:block;
 }
+/* ******************************** */

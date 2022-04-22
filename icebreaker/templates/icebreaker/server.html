@@ -9,6 +9,8 @@
   <link href="{% static 'coloring/vendors/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" type="text/css" />
   <link rel="stylesheet" type="text/css" href="{% static 'coloring/style.css' %}" />
 
+<link href="https://fonts.googleapis.com/css2?family=Roboto" rel="stylesheet"> 
+  
 </head>
 <body>
 
@@ -47,7 +49,8 @@
         userMap: new Map(), // maps userhash to player object
         userScores: new Map(), // maps userhash to current score
         currentTurn:[], // list of userhashes. the player at the back of the list is the current turn.
-        usersLeftGuessing:[] // current list of userhashes that need to guess. Remove person after they guess. Reset between rounds.
+        usersLeftGuessing:[], // current list of userhashes that need to guess. Remove person after they guess. Reset between rounds.
+        userhashes: [] // list of userhashes to reset usersLeftGuessing
       };
       let socket = null
       document.getElementById("showCorrectAnswer").style.display = 'none';
@@ -69,6 +72,7 @@
         console.log("CLICKED NEXT ROUND BUTTON")
         if(state.currentTurn.length == 0) {
           console.log("GAME IS OVER")
+          // TODO: SHOW RESULTS
           document.getElementById("showCorrectAnswer").style.display = 'none';
           document.getElementById("endingScreen").style.display = 'block';
         } else {
@@ -103,6 +107,7 @@
           state.userScores.set(current["userhash"], 0);
           state.players.push(current["username"]);
           state.usersLeftGuessing.push(current["userhash"]);
+          state.userhashes.push(current["userhash"]);
         } 
         
         console.log("before: ", state.players)
@@ -138,31 +143,7 @@
         }
         socket.send(message);
       }
-
-      // Right now this is going through every player and appending their question and answer, along with the candidates as buttons to vote
-
-      // for (const [key, value] of userMap.entries()) {
-      //     console.log("appending: ", key)
-      //     document.getElementById('question').textContent = userMap.get(key)["question"]
-      //     document.getElementById('answer').textContent = userMap.get(key)["answer"] 
-          
-
-      //     // somehow wait to show the next person, also need to send the buttons to the user screens
-          
-      //     // Send buttons to user screens:
-      //     // Send a socket message "000" to ws server
-      //     // ws receives "000" -> ws server sends message to all users "PPP"
-      //     // user recieves "PPP" -> all users make ajax call "/icebreaker/default" to retreive all users
-      //      // Profit?????
-      //   }
-
-      //   usernameList.forEach(element => $('#candidates').append(`<button> ${element} </button>`));
-        
-      //   document.getElementById("game").style.display = 'block';
-
       
-      
-      // TODO: CHANGE
       function runServer(){
         // Receive a message from websocket server
         // Admin: Map ID to name & assigned questions and answers,
@@ -179,7 +160,6 @@
             if(userData[0] === "A") {
               updatePlayerTurn(userData)
             }
-            
         }
       }
 
@@ -198,6 +178,7 @@
         // Remove this player from the players who still need to guess
         const index = state.usersLeftGuessing.indexOf(userhash)
         if(index > -1) {
+          console.log("REMOVING " + userhash + "FROM USERS LEFT GUESSING")
           state.usersLeftGuessing.splice(index, 1);
         } else {
           console.log("ERROR- USERHASH WHO GUESSED WAS NOT FOUND IN CURRENT USERHASH LIST:")
@@ -210,18 +191,13 @@
           // TODO maybe show who got the question right?
           console.log("RECIEVED ALL ANSWERS. SHOWING CORRECT ANSWER")
           state.currentTurn.pop()
-          resetUsersLeftGuessing()
+          // resetUsersLeftGuessing()
+          state.usersLeftGuessing = [...state.userhashes]
+          console.log("RESULTING RESET OF USERHASHES: ")
+          console.log(state.usersLeftGuessing)
           document.getElementById('correctAnswer').textContent = correctAnswer;
           document.getElementById("game").style.display = 'none';
           document.getElementById("showCorrectAnswer").style.display = 'block';
-        }
-      }
-
-      function resetUsersLeftGuessing() {
-        state.usersLeftGuessing = [];
-        let userhashes = state.userMap.keys();
-        for(let i = 0; i < userhashes.length; i++){
-          state.usersLeftGuessing.push(userhashes[i])
         }
       }
 
