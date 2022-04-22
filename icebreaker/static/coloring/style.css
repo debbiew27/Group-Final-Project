@@ -1,0 +1,108 @@
+:root {
+  --button-color: #C1666B;
+  --main-pg-bg: #2F3D7B;
+  --phone-bg: #E4DFDA;
+  --game-bg: #4281A4;
+}
+
+/* Index.html */
+.landing {
+  background-color: var(--main-pg-bg);
+}
+
+/* Player.html */
+#myCanvas {
+  border: 1px solid black;
+}
+
+.topic {
+  display:block;
+  width: 90%;
+  height: 25vh;
+  font-size:8em;
+  background-color: var(--button-color);
+  color:white;
+  margin-left: 5%;
+  border-radius:.5em;
+}
+
+.center {
+  margin: auto;
+  width: 100vw/2;
+}
+
+#lobbyText {
+  font-size:7em;
+  text-align:center;
+}
+
+.inputBox {
+  width: 80vw;
+  height: 7vh;
+  background-color:white;
+  color:black;
+  font-size:3em;
+}
+
+.SubmitButton {
+  display:block;
+  margin-top:1.5em;
+  width: 80vw;
+  height: 7vh;
+  background-color: var(--button-color);
+  color:white;
+  border-radius: 1.2em;
+  font-size: 5em;
+  
+}
+
+#question {
+  margin-top: 14vh;
+  margin-bottom: 5vh;
+  font-size: 4.5em;
+  text-align:center;
+}
+
+#submitAnswer {
+  margin-top:2em;
+  background-color:var(--button-color);
+  display:block;
+  border-style: solid;
+  border-radius: .5em;
+  float:right;
+  font-size: 3em;
+  padding:.5em;
+  color:white;
+}
+
+#answer {
+  display:block;
+  color:black;
+  width: 75vw;
+  height: 25vh;
+  font-size:3em;
+}
+
+#chooseTopicText{
+  font-size: 8em;
+}
+
+/* Server.html */
+body {
+  background-color: #2F3D7B;
+}
+
+.title {
+  font-size:12em;
+  color:var(--phone-bg);
+}
+
+#startGame {
+  background-color:#C1666B;
+  display:block;
+  width: 5vw
+}
+
+#new_players{
+  display:block;
+}

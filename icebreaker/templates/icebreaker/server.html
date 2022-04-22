@@ -7,33 +7,54 @@
   <title>Final Project: Implementation Prototype</title>
 	<script type="text/javascript" src="{% static 'coloring/vendors/jquery/jquery-3.3.1.min.js' %}"></script>
   <link href="{% static 'coloring/vendors/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" type="text/css" />
-  
-  <style type="text/css">
-    #myCanvas {
-      border: 1px solid black;
-    }
-  </style>
-  
+  <link rel="stylesheet" type="text/css" href="{% static 'coloring/style.css' %}" />
+
 </head>
 <body>
 
-
   
-  <div class="container">
-    
+  <div id = "startPage" class="container">
     <div class="row">
-      <div class="col-12">
-        <h1>Lobby</h1> 
+        <h1 class="title">ICEBREAKER</h1> 
          <div id="new_players"></div>
           <br></br>
-        
-        <button id="startGame"> Start Game</button>
-    </div>
+        <button id="startGame"> Start Game </button>
   </div>
+  </div>
+  
+  <div id = "game" class="container">
+    <h1 id = "question"></h1>
+    <div id = "answer"></div>
+    <div id = "candidates"></div>
+  </div>
+  
+  <div id = "showCorrectAnswer" class="container">
+    <h1>The correct answer was:</h1>
+    <div id = "correctAnswer"></div>
+    <button id="nextRound"> Next Round </button>
+  </div>
+  
+  <div id = "endingScreen" class="container">
+    <h1>Thanks for playing!</h1>
+    <button id="playAgain"> Play Again </button>
+  </div>
+    
   <script>
+    
     window.onload = function() {
-      const userMap = new Map()
-      $('#startGame').on("click", function(event){
+      var state = {
+        players:[], // names of all the players
+        userMap: new Map(), // maps userhash to player object
+        userScores: new Map(), // maps userhash to current score
+        currentTurn:[], // list of userhashes. the player at the back of the list is the current turn.
+        usersLeftGuessing:[] // current list of userhashes that need to guess. Remove person after they guess. Reset between rounds.
+      };
+      let socket = null
+      document.getElementById("showCorrectAnswer").style.display = 'none';
+      document.getElementById("game").style.display = 'none';
+      document.getElementById("endingScreen").style.display = 'none';
+      
+      $('#startGame').on("click", function(event) {
         console.log("clicked Start game")
         // Display "Answer survey on your phone!"
         $.ajax({
@@ -42,62 +63,194 @@
             success: populateUsers
         })
         
-        // give the players their surveys
-        
       })
+
+      $('nextRound').on("click", function(event) {
+
+        if(state.currentTurn.length == 0) {
+          console.log("GAME IS OVER")
+          document.getElementById("showCorrectAnswer").style.display = 'none';
+          document.getElementById("endingScreen").style.display = 'block';
+        } else {
+          let currentPlayerShowing = state.currentTurn[state.currentTurn.length - 1];
+
+          document.getElementById('question').textContent = state.userMap.get(currentPlayerShowing).question
+          document.getElementById('answer').textContent = state.userMap.get(currentPlayerShowing).answer
+  
+          document.getElementById("showCorrectAnswer").style.display = 'none';
+          document.getElementById("game").style.display = 'block';
+        }
+      })
+
+      function shuffle(array) {
+        let currentIndex = array.length,  randomIndex;
+        while (currentIndex != 0) {
+          randomIndex = Math.floor(Math.random() * currentIndex);
+          currentIndex--;
+          [array[currentIndex], array[randomIndex]] = [
+            array[randomIndex], array[currentIndex]];
+        }
+        return array;
+      }
       
       function populateUsers(response) {
-        console.log("epic")
+        console.log("in populate userss")
         var all_players = response["players"]
         for(var j = 0; j < all_players.length; j++) {
           let current = all_players[j.toString()];
-          userMap.set(current["userhash"], current);
+          state.userMap.set(current["userhash"], current);
+          state.currentTurn.push(current["userhash"]);
+          state.userScores.set(current["userhash"], 0);
+          state.players.push(current["username"]);
+          state.usersLeftGuessing.push(current["userhash"]);
         } 
-        console.log("USERS: ", userMap)
+        
+        console.log("before: ", state.players)
+        state.players = shuffle(state.players);
+        console.log("after: ", state.players)
+        state.currentTurn = shuffle(state.currentTurn);
+  
+        console.log("USERS: ", state.userMap)
+        document.getElementById("startPage").style.display = 'none';
+        // add all the player's name to the screen for guessing
+        state.players.forEach(element => $('#candidates').append(`<button> ${element} </button>`));
+        document.getElementById("game").style.display = 'block';
+
+
+        
+        // start the game, by showing question and answer of each user
+        console.log("INIT CURRENT TURN LIST: ")
+        console.log(state.currentTurn)
+        const currentPlayerShowing = state.currentTurn.at(-1);
+        console.log("USERMAP:")
+        console.log(state.userMap)
+        console.log("FETCHING THIS USER:")
+        console.log(currentPlayerShowing)
+
+        document.getElementById('question').textContent = state.userMap.get(currentPlayerShowing).question
+        document.getElementById('answer').textContent = state.userMap.get(currentPlayerShowing).answer
+
+        // send out message to everyone that we want their answers
+        // TODO: add info on which question we're requesting guesses to. If the player who answered this question sees the message, don't allow them to guess
+        var message = "REQUESTINGANSWERS";
+        for(let i = 0; i < state.players.length; i++) {
+          message += "_" + state.players[i];
+        }
+        socket.send(message);
       }
+
+      // Right now this is going through every player and appending their question and answer, along with the candidates as buttons to vote
+
+      // for (const [key, value] of userMap.entries()) {
+      //     console.log("appending: ", key)
+      //     document.getElementById('question').textContent = userMap.get(key)["question"]
+      //     document.getElementById('answer').textContent = userMap.get(key)["answer"] 
+          
+
+      //     // somehow wait to show the next person, also need to send the buttons to the user screens
+          
+      //     // Send buttons to user screens:
+      //     // Send a socket message "000" to ws server
+      //     // ws receives "000" -> ws server sends message to all users "PPP"
+      //     // user recieves "PPP" -> all users make ajax call "/icebreaker/default" to retreive all users
+      //      // Profit?????
+      //   }
+
+      //   usernameList.forEach(element => $('#candidates').append(`<button> ${element} </button>`));
+        
+      //   document.getElementById("game").style.display = 'block';
+
+      
       
       // TODO: CHANGE
-      // const userData = new Map();
       function runServer(){
         // Receive a message from websocket server
         // Admin: Map ID to name & assigned questions and answers,
         // Establish websocket connection
         
-        var socket = new WebSocket("wss://ws-server-template.debbiew27.repl.co", "very-good-protocol");
-        socket.onmessage = function(message) {
-          let userData = message.data.split('_')
-          let username = userData[0]
-          let topic = userData[1]
-          let userhash = userData[2]
-
-          console.log(message.data)
-          
-          // userData.set(userHash, [username])          
-
-          var data_to_send = {
-            "username": username,
-            "userhash": userhash,
-            "topic": topic
-          };
-          console.log(username, topic, userhash)
-          //This ajax request sends a POST request to the server
-          
-          $.ajax({
-            type: "POST",
-            url: "/icebreaker/"+ username + "/",
-            data: JSON.stringify(data_to_send),
-            success: function (response) {
-              // prints the response from the server
-              console.log(response); 
-              
+          socket = new WebSocket("wss://ws-server-template.debbiew27.repl.co", "very-good-protocol");
+          socket.onmessage = function(message) {
+            console.log("RECIEVED DATA: " + message.data)
+            let userData = message.data.split('_')
+            console.log(userData)
+            if(userData[0] === "U"){
+              updateLobbyWithPlayerNames(userData)
             }
-          });
-
-          
-          $("#new_players").append(`${username}`);
-          $("#new_players").append($("<br>"));
-          
+            if(userData[0] === "A") {
+              updatePlayerTurn(userData)
+            }
+            
         }
+      }
+
+      function updatePlayerTurn(userData) {
+        // this is a guess from a player to a question on the screen
+        let guess = userData[1]
+        let userhash = userData[2]
+
+        // check if the person guessed correctly
+        let correctAnswerPerson = state.currentTurn[state.currentTurn.length - 1]
+        let correctAnswer = state.userMap.get(correctAnswerPerson).username
+        if(guess === correctAnswer) {
+          state.userScores.set(userhash, state.userScores.get(userhash) + 1)
+        } // if guess wrong, do nothing
+
+        // Remove this player from the players who still need to guess
+        const index = state.usersLeftGuessing.indexOf(userhash)
+        if(index > -1) {
+          state.usersLeftGuessing.splice(index, 1);
+        } else {
+          console.log("ERROR- USERHASH WHO GUESSED WAS NOT FOUND IN CURRENT USERHASH LIST:")
+          console.log(userhash)
+        }
+
+        // check if there's no one else who still needs to guess
+        if(state.usersLeftGuessing.length == 0) {
+          // Everyone has submitted a guess. Remove the current player turn. Show correct answer screen. Reset usersLeftGuessing list.
+          // TODO maybe show who got the question right?
+          console.log("RECIEVED ALL ANSWERS. SHOWING CORRECT ANSWER")
+          state.currentTurn.pop()
+          resetUsersLeftGuessing()
+          document.getElementById('correctAnswer').textContent = correctAnswer;
+          document.getElementById("game").style.display = 'none';
+          document.getElementById("showCorrectAnswer").style.display = 'block';
+        }
+      }
+
+      function resetUsersLeftGuessing() {
+        state.usersLeftGuessing = state.userMap.keys()
+      }
+
+      function updateLobbyWithPlayerNames(userData) {
+        let username = userData[1]
+        let topic = userData[2]
+        let userhash = userData[3]
+        
+        // userData.set(userHash, [username])          
+
+        var data_to_send = {
+          "username": username,
+          "userhash": userhash,
+          "topic": topic
+        };
+        console.log("ADDING PERSON TO LOBBY SCREEN:")
+        console.log(username, topic, userhash)
+        //This ajax request sends a POST request to the server
+        
+        $.ajax({
+          type: "POST",
+          url: "/icebreaker/"+ username + "/",
+          data: JSON.stringify(data_to_send),
+          success: function (response) {
+            // prints the response from the server
+            console.log(response); 
+            
+          }
+        });
+
+        
+        $("#new_players").append(`${username}`);
+        $("#new_players").append($("<br>"));
       }
 
       

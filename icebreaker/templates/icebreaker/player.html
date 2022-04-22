@@ -7,73 +7,61 @@
   <title>Final Project: Implementation Prototype</title>
 	<script type="text/javascript" src="{% static 'coloring/vendors/jquery/jquery-3.3.1.min.js' %}"></script>
   <link href="{% static 'coloring/vendors/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" type="text/css" />
-  
-  <style>
-    #myCanvas {
-      border: 1px solid black;
-    }
+<!--   <link rel="stylesheet" href="style.css" type="text/css"/> -->
+  <link rel="stylesheet" type="text/css" href="{% static 'coloring/style.css' %}" />
+  <link href='https://fonts.googleapis.com/css?family=Sofia' rel='stylesheet'>
 
-    .food{
-      display: block;
-      color: red;
-    }
-    
-    .animals {
-      display: block;
-    }
-    
-    .travel {
-      display: block;
-    }
-
-    
-
-</style>
-  
 </head>
 <body style = "background-color: #E4DFDA">
 
-  <div id= "lobby" class="container">
+  <div id= "lobby" >
       <div class="row">
-        <div class="col-12">
-          <h1>Enter Lobby Code</h1> 
-          <input id="lobbyCode"></input>
-          <h1>Enter Your Name</h1> 
-          <input id="userName"></input>
-          <button id="goToSurvey"> Submit </button>
+        <div class="center">
+          <h1 id = "lobbyText"style="padding-top:20vh;" > Lobby Code</h1> 
+          <input style = "margin-bottom: 2em"class="inputBox" id="lobbyCode"></input>
+          <h1 id="lobbyText">Nickname</h1> 
+          <input class="inputBox" id="userName"></input>
+          
+          <button class = "SubmitButton" id="goToSurvey"> START </button>
       </div>
     </div>
   </div>
   
   <div id = "survey">
-    <h1 style= "text-align: center"> Choose a Topic! </h1>
-        <p> <button style = "width: 100%; height: 25vh"id="food" type="button" class="btn btn-default">Food</button> </p>
+    <h1 id = "chooseTopicText"style= "text-align: center"> Choose a Topic! </h1>
+        <p> <button  id="food" type="button" class="btn btn-default topic">Food</button> </p>
 
-      <p> <button style = "width: 100%; height: 25vh" id="animals" type="button" class="btn btn-default">Animals</button></p>
+      <p> <button id="animals" type="button" class="btn btn-default topic">Animals</button></p>
 
       <p>
-        <button style = "width:100%; height: 25vh" id="travel" type="button" class="btn btn-default">Travel</button>
+        <button id="travel" type="button" class="btn btn-default topic">Travel</button>
       </p>
 </div>
 
 <div id = "questions" class="container">
-    <h1 style= "text-align: center"> Answer your Questions! </h1>
-    <div class="row text-center">
-      <div id = "question"></div>
-      <input id="answer"></input>
-      <button id="submitAnswer" type="button" class="btn btn-default">Done</button>
-    </div>
+      <div id = "question"> How much wood would a woodchuck chuck if a woodchuck could chuck wood?</div>
+      <p>
+      <textarea id="answer"></textarea>
+    </p>
+      <button id="submitAnswer" type="button" class="btn btn-default">Continue</button>
 </div>
 
 <div id = "waitGameStart" class="container">
     <h1 style= "text-align: center"> Thank you for your answer! Waiting for the game to start.</h1>
 </div>
 
+<div id = "guessButtons" class="container">
+      <div id = "candidates"></div>
+</div>
+
   
   <script>
     window.onload = function() {
+      const guessHeader = "A_";
       // On load, hide the survey menu
       // unhide survey menu when they click submit
+      let guessButtonsElement = document.getElementById("guessButtons");
+      guessButtonsElement.style.display = 'none';  
       let surveyElement = document.getElementById("survey");
       surveyElement.style.display = 'none';  
       let questionsElement = document.getElementById("questions");
@@ -82,6 +70,13 @@
       
       var socket;
       var username;
+
+      function clearButtons() {
+        let candidatesButtonsElement = document.getElementById("candidates");
+        while(candidatesButtonsElement.firstChild) {
+          candidatesButtonsElement.removeChild(candidatesButtonsElement.lastChild);
+        }
+      }
       
       $('#goToSurvey').on("click", function(event) {
         console.log("clicked goToSurvey")
@@ -95,11 +90,46 @@
           console.log("Socket to server opened")
           // only send username and other info once you finish the survey
         });
+
+        socket.onmessage = function(message) {
+            let splitMessage = message.data.split('_')
+          
+          
+            if(splitMessage[0] === "REQUESTINGANSWERS") {
+              // clear buttons first before each round so the buttons dont stack
+              clearButtons()
+              
+              console.log("SHOWING BUTTONS FOR GUESSING")
+              let waitGameStartElement = document.getElementById("waitGameStart");
+              waitGameStartElement.style.display = 'none';
+              let guessButtonsElement = document.getElementById("guessButtons");
+              guessButtonsElement.style.display = 'block';
+              splitMessage.shift()
+              // splitMessage should only have the list of players
+
+              splitMessage.forEach(element => {
+                let newButton = document.createElement(`button`);
+                newButton.textContent = element;
+                
+                newButton.addEventListener("click", () => {
+                  var guess = guessHeader + element;
+                  socket.send(guess)
+                })
+                $('#candidates').append(newButton)
+              });
+            } else {
+              console.log("RECIEVED WEIRD MESSAGE FROM SERVER: ")
+              console.log(splitMessage)
+            }
+            
+        }
+
+        
       })
 
       $('#food').on("click", function(event) {
         username = $('#userName').val();
-        socket.send("U"+ username + "_Food");
+        socket.send("U_"+ username + "_Food");
         surveyElement.style.display = 'none';
         questionsElement.style.display = 'block';
         updateQuestion(username);
@@ -107,7 +137,7 @@
       
       $('#animals').on("click", function(event) {
         username = $('#userName').val()
-        socket.send("U"+$('#userName').val() + "_Animals");
+        socket.send("U_"+$('#userName').val() + "_Animals");
         surveyElement.style.display = 'none';  
         questionsElement.style.display = 'block';
         updateQuestion(username)
@@ -116,7 +146,7 @@
       
       $('#travel').on("click", function(event) {
         username = $('#userName').val()
-        socket.send("U"+$('#userName').val() + "_Travel");
+        socket.send("U_"+$('#userName').val() + "_Travel");
         surveyElement.style.display = 'none'; 
         questionsElement.style.display = 'block';  
         updateQuestion(username)
