@@ -65,8 +65,8 @@
         
       })
 
-      $('nextRound').on("click", function(event) {
-
+      $('#nextRound').on("click", function(event) {
+        console.log("CLICKED NEXT ROUND BUTTON")
         if(state.currentTurn.length == 0) {
           console.log("GAME IS OVER")
           document.getElementById("showCorrectAnswer").style.display = 'none';
@@ -218,7 +218,11 @@
       }
 
       function resetUsersLeftGuessing() {
-        state.usersLeftGuessing = state.userMap.keys()
+        state.usersLeftGuessing = [];
+        let userhashes = state.userMap.keys();
+        for(let i = 0; i < userhashes.length; i++){
+          state.usersLeftGuessing.push(userhashes[i])
+        }
       }
 
       function updateLobbyWithPlayerNames(userData) {

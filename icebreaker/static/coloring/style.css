@@ -10,6 +10,12 @@
   background-color: var(--main-pg-bg);
 }
 
+.bold-btn {
+  --button-color: #C1666B;
+  font-family: 'Roboto';
+  font-style: italic;
+}
+
 /* Player.html */
 #myCanvas {
   border: 1px solid black;
@@ -28,7 +34,7 @@
 
 .center {
   margin: auto;
-  width: 100vw/2;
+  width: 50vw;
 }
 
 #lobbyText {
@@ -89,7 +95,7 @@
 
 /* Server.html */
 body {
-  background-color: #2F3D7B;
+  background-color: var(--main-pg-bg);
 }
 
 .title {
@@ -98,7 +104,7 @@ body {
 }
 
 #startGame {
-  background-color:#C1666B;
+  background-color: var(--button-color);
   display:block;
   width: 5vw
 }
