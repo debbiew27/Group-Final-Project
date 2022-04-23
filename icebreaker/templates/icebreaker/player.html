@@ -40,6 +40,8 @@
       <textarea id="answer"></textarea>
     </p>
       <button id="submitAnswer" type="button" class="btn btn-default">Continue</button>
+    <div id="answerError"></div>
+  
 </div>
 
 <div id = "waitGameStart" class="container">
@@ -200,6 +202,12 @@
       })
 
       $('#submitAnswer').on("click", function(event) {
+        if($('#answer').val().indexOf("_") != -1) {
+          console.log("ANSWER CONTAINS UNDERSCORES")
+          document.getElementById("answerError").textContent = "Your answer can't contain underscores."
+          return
+        }
+        document.getElementById("answerError").textContent = ""
         var data_to_send = {
           "username" : $('#userName').val(),
           "answer": $('#answer').val()
