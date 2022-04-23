@@ -33,11 +33,15 @@
   <div id = "showCorrectAnswer" class="container">
     <h1>The correct answer was:</h1>
     <div id = "correctAnswer"></div>
+    <h1>Current Leaderboard:</h1>
+    <div id = "currentLeaderboard"></div>
     <button id="nextRound"> Next Round </button>
   </div>
   
   <div id = "endingScreen" class="container">
     <h1>Thanks for playing!</h1>
+    <h1>Final Scores:</h1>
+    <div id = "finalLeaderboard"></div>
     <button id="playAgain"> Play Again </button>
   </div>
     
@@ -59,22 +63,24 @@
       
       $('#startGame').on("click", function(event) {
         console.log("clicked Start game")
-        // Display "Answer survey on your phone!"
         $.ajax({
             type: "GET",
             url: "/icebreaker/default",
             success: populateUsers
         })
-        
       })
 
       $('#nextRound').on("click", function(event) {
         console.log("CLICKED NEXT ROUND BUTTON")
         if(state.currentTurn.length == 0) {
-          console.log("GAME IS OVER")
+          console.log("SENDING GAME IS OVER TO PLAYERS")
           // TODO: SHOW RESULTS
+          document.getElementById("finalLeaderboard").textContent = getScoreboardString()
           document.getElementById("showCorrectAnswer").style.display = 'none';
+          
           document.getElementById("endingScreen").style.display = 'block';
+
+          socket.send("GAMEOVER");
         } else {
           let currentPlayerShowing = state.currentTurn[state.currentTurn.length - 1];
 
@@ -83,6 +89,7 @@
   
           document.getElementById("showCorrectAnswer").style.display = 'none';
           document.getElementById("game").style.display = 'block';
+          sendRequestingAnswersMessage(currentPlayerShowing)
         }
       })
 
@@ -137,7 +144,36 @@
 
         // send out message to everyone that we want their answers
         // TODO: add info on which question we're requesting guesses to. If the player who answered this question sees the message, don't allow them to guess
+        // var message = "REQUESTINGANSWERS";
+        // // TODO remove the person whose answer is on the screen from the usersLeftGuessing list so we don't wait for them
+        // const index = state.usersLeftGuessing.indexOf(currentPlayerShowing)
+        // if(index > -1) {
+        //   console.log("SHOWING TARGET PERSON ON SCREEN. REMOVING " + currentPlayerShowing + " FROM USERS LEFT GUESSING")
+        //   state.usersLeftGuessing.splice(index, 1);
+        // } else {
+        //   console.log("ERROR- PERSON WHO IS BEING SHOWN ON SCREEN WASN'T FOUND IN USERSLEFTGUESSING LIST")
+        // }
+        
+        // message += "_" + currentPlayerShowing;
+        // for(let i = 0; i < state.players.length; i++) {
+        //   message += "_" + state.players[i];
+        // }
+        // socket.send(message);
+        sendRequestingAnswersMessage(currentPlayerShowing)
+      }
+
+      function sendRequestingAnswersMessage(currentPlayerShowing) {
         var message = "REQUESTINGANSWERS";
+        // TODO remove the person whose answer is on the screen from the usersLeftGuessing list so we don't wait for them
+        const index = state.usersLeftGuessing.indexOf(currentPlayerShowing)
+        if(index > -1) {
+          console.log("SHOWING TARGET PERSON ON SCREEN. REMOVING " + currentPlayerShowing + " FROM USERS LEFT GUESSING")
+          state.usersLeftGuessing.splice(index, 1);
+        } else {
+          console.log("ERROR- PERSON WHO IS BEING SHOWN ON SCREEN WASN'T FOUND IN USERSLEFTGUESSING LIST")
+        }
+        
+        message += "_" + currentPlayerShowing;
         for(let i = 0; i < state.players.length; i++) {
           message += "_" + state.players[i];
         }
@@ -178,7 +214,7 @@
         // Remove this player from the players who still need to guess
         const index = state.usersLeftGuessing.indexOf(userhash)
         if(index > -1) {
-          console.log("REMOVING " + userhash + "FROM USERS LEFT GUESSING")
+          console.log("REMOVING " + userhash + " FROM USERS LEFT GUESSING")
           state.usersLeftGuessing.splice(index, 1);
         } else {
           console.log("ERROR- USERHASH WHO GUESSED WAS NOT FOUND IN CURRENT USERHASH LIST:")
@@ -191,22 +227,34 @@
           // TODO maybe show who got the question right?
           console.log("RECIEVED ALL ANSWERS. SHOWING CORRECT ANSWER")
           state.currentTurn.pop()
-          // resetUsersLeftGuessing()
           state.usersLeftGuessing = [...state.userhashes]
           console.log("RESULTING RESET OF USERHASHES: ")
           console.log(state.usersLeftGuessing)
           document.getElementById('correctAnswer').textContent = correctAnswer;
           document.getElementById("game").style.display = 'none';
+
+          document.getElementById("currentLeaderboard").textContext = getScoreboardString()
+          
           document.getElementById("showCorrectAnswer").style.display = 'block';
         }
+      }
+
+      function getScoreboardString() {
+        var leaderboard = "";
+        console.log("DISPLAYING CURRENT SCOREBOARD:")
+
+        for (const [key, value] of state.userScores.entries()) {
+          console.log(key, value);
+          leaderboard += state.userMap.get(key).username + ": " + value + "\n";
+        }
+        console.log(leaderboard)
+        return leaderboard
       }
 
       function updateLobbyWithPlayerNames(userData) {
         let username = userData[1]
         let topic = userData[2]
         let userhash = userData[3]
-        
-        // userData.set(userHash, [username])          
 
         var data_to_send = {
           "username": username,
@@ -224,18 +272,14 @@
           success: function (response) {
             // prints the response from the server
             console.log(response); 
-            
           }
         });
 
-        
         $("#new_players").append(`${username}`);
         $("#new_players").append($("<br>"));
       }
 
-      
       function init(){
-        // TODO
         runServer(); 
       }
 

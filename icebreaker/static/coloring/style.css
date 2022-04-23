@@ -44,14 +44,16 @@
   border-radius:.5em;
 }
 
-.center {
-  margin: auto;
-  width: 50vw;
+.center{
+  text-align:center;
 }
+
 
 #lobbyText {
   font-size:7em;
   text-align:center;
+  margin: auto;
+  width: 50vw;
 }
 
 .inputBox {
@@ -59,7 +61,7 @@
   height: 7vh;
   background-color:white;
   color:black;
-  font-size:3em;
+  font-size:5em;
 }
 
 .SubmitButton {
@@ -71,8 +73,12 @@
   color:white;
   border-radius: 1.2em;
   font-size: 5em;
-  
 }
+
+#leftMargin {
+  margin-left:1.8em;
+}
+
 
 #question {
   margin-top: 14vh;
