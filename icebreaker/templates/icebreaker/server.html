@@ -14,7 +14,6 @@
 </head>
 <body>
 
-  
   <div id = "startPage" class="container">
     <div class="row">
         <h1 class="title">ICEBREAKER</h1> 
@@ -74,8 +73,8 @@
         console.log("CLICKED NEXT ROUND BUTTON")
         if(state.currentTurn.length == 0) {
           console.log("SENDING GAME IS OVER TO PLAYERS")
-          // TODO: SHOW RESULTS
-          document.getElementById("finalLeaderboard").textContent = getScoreboardString()
+          document.getElementById("finalLeaderboard").textContent = ""
+          updateScoreBoard("#finalLeaderboard")
           document.getElementById("showCorrectAnswer").style.display = 'none';
           
           document.getElementById("endingScreen").style.display = 'block';
@@ -142,23 +141,6 @@
         document.getElementById('question').textContent = state.userMap.get(currentPlayerShowing).question
         document.getElementById('answer').textContent = state.userMap.get(currentPlayerShowing).answer
 
-        // send out message to everyone that we want their answers
-        // TODO: add info on which question we're requesting guesses to. If the player who answered this question sees the message, don't allow them to guess
-        // var message = "REQUESTINGANSWERS";
-        // // TODO remove the person whose answer is on the screen from the usersLeftGuessing list so we don't wait for them
-        // const index = state.usersLeftGuessing.indexOf(currentPlayerShowing)
-        // if(index > -1) {
-        //   console.log("SHOWING TARGET PERSON ON SCREEN. REMOVING " + currentPlayerShowing + " FROM USERS LEFT GUESSING")
-        //   state.usersLeftGuessing.splice(index, 1);
-        // } else {
-        //   console.log("ERROR- PERSON WHO IS BEING SHOWN ON SCREEN WASN'T FOUND IN USERSLEFTGUESSING LIST")
-        // }
-        
-        // message += "_" + currentPlayerShowing;
-        // for(let i = 0; i < state.players.length; i++) {
-        //   message += "_" + state.players[i];
-        // }
-        // socket.send(message);
         sendRequestingAnswersMessage(currentPlayerShowing)
       }
 
@@ -233,22 +215,20 @@
           document.getElementById('correctAnswer').textContent = correctAnswer;
           document.getElementById("game").style.display = 'none';
 
-          document.getElementById("currentLeaderboard").textContext = getScoreboardString()
-          
+          document.getElementById("currentLeaderboard").textContent = ""
+          updateScoreBoard("#currentLeaderboard")
           document.getElementById("showCorrectAnswer").style.display = 'block';
         }
       }
 
-      function getScoreboardString() {
-        var leaderboard = "";
-        console.log("DISPLAYING CURRENT SCOREBOARD:")
+      function updateScoreBoard(divname) {
+        console.log("DISPLAYING CURRENT SCOREBOARD")
 
         for (const [key, value] of state.userScores.entries()) {
           console.log(key, value);
-          leaderboard += state.userMap.get(key).username + ": " + value + "\n";
+          $(divname).append(state.userMap.get(key).username + ": " + value)
+          $(divname).append($("<br>"));
         }
-        console.log(leaderboard)
-        return leaderboard
       }
 
       function updateLobbyWithPlayerNames(userData) {
@@ -263,14 +243,12 @@
         };
         console.log("ADDING PERSON TO LOBBY SCREEN:")
         console.log(username, topic, userhash)
-        //This ajax request sends a POST request to the server
         
         $.ajax({
           type: "POST",
           url: "/icebreaker/"+ username + "/",
           data: JSON.stringify(data_to_send),
           success: function (response) {
-            // prints the response from the server
             console.log(response); 
           }
         });

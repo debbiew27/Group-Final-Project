@@ -109,8 +109,7 @@
 
         socket.onmessage = function(message) {
             let splitMessage = message.data.split('_')
-          
-          
+
             if(splitMessage[0] === "REQUESTINGANSWERS") {
               let waitGameStartElement = document.getElementById("waitGameStart");
               waitGameStartElement.style.display = 'none';
@@ -131,8 +130,7 @@
               
               } else {
                 // clear buttons first before each round so the buttons dont stack
-                
-                
+                                
                 console.log("SHOWING BUTTONS FOR GUESSING")
                 
                 let guessButtonsElement = document.getElementById("guessButtons");
@@ -148,7 +146,6 @@
                   newButton.addEventListener("click", () => {
                     var guess = guessHeader + element;
                     
-                    // TODO Switch to "waiting for other players to guess" screen
                     let waitForOthersToGuessElement = document.getElementById("waitForOthersToGuess");
                     waitForOthersToGuessElement.style.display = 'block';
                     
@@ -170,10 +167,7 @@
               console.log("RECIEVED WEIRD MESSAGE FROM SERVER: ")
               console.log(splitMessage)
             }
-            
         }
-
-        
       })
 
       $('#food').on("click", function(event) {
@@ -217,7 +211,6 @@
             document.getElementById('waitGameStart').style.display = 'block';
           }
         });
-        
       })
 
       function updateQuestion(username) {
