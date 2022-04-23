@@ -9,8 +9,6 @@
   <link href="{% static 'coloring/vendors/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" type="text/css" />
   <link rel="stylesheet" type="text/css" href="{% static 'coloring/style.css' %}" />
 
-  
-
 </head>
 <body style = "background-color: #E4DFDA">
 
@@ -20,7 +18,7 @@
           <input style = "margin-bottom: 2em; "class="inputBox" id="lobbyCode"></input>
           <h1 id="lobbyText">Nickname</h1> 
           <input class="inputBox" id="userName"></input>
-          
+          <div id="usernameError"></div>
           <button style ="margin-left: 1.2em"class = "SubmitButton" id="goToSurvey"> START </button>
     </div>
   </div>
@@ -37,7 +35,7 @@
 </div>
 
 <div id = "questions" class="container">
-      <div id = "question"> How much wood would a woodchuck chuck if a woodchuck could chuck wood?</div>
+      <div id = "question"> Loading question... </div>
       <p>
       <textarea id="answer"></textarea>
     </p>
@@ -96,6 +94,13 @@
       
       $('#goToSurvey').on("click", function(event) {
         console.log("clicked goToSurvey")
+        // check if name is valid
+        if ($('#userName').val().indexOf("_") != -1) {
+          console.log("USERNAME CONTAINS UNDERSCORES")
+          document.getElementById("usernameError").textContent = "Your nickname can't contain underscores."
+          return
+        }
+        document.getElementById("usernameError").textContent = ""
         let lobby = document.getElementById('lobby');
         lobby.style.display = 'none';
         surveyElement.style.display = 'block';
@@ -184,7 +189,6 @@
         surveyElement.style.display = 'none';  
         questionsElement.style.display = 'block';
         updateQuestion(username)
-    
       })
       
       $('#travel').on("click", function(event) {
