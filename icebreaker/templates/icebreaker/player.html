@@ -170,7 +170,9 @@
               let endingScreenElement = document.getElementById("endingMessage");
               endingScreenElement.style.display = 'block';
               
-            } else {
+            } else if(splitMessage[0] == "RESTART"){
+              window.location.reload();
+            }else {
               console.log("RECIEVED WEIRD MESSAGE FROM SERVER: ")
               console.log(splitMessage)
             }

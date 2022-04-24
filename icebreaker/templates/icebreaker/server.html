@@ -69,6 +69,23 @@
         })
       })
 
+      $('#playAgain').on("click", function(event) {
+        console.log("restarting game")
+        $.ajax({
+            type: "DELETE",
+            url: "/icebreaker/default",
+            success: restartGame
+        })
+      })
+
+      function restartGame(){
+        console.log("calling restart")
+        // reset the states
+        socket.send("RESTART");
+        socket.close();
+        window.location.reload();
+      }
+      
       $('#nextRound').on("click", function(event) {
         console.log("CLICKED NEXT ROUND BUTTON")
         if(state.currentTurn.length == 0) {
@@ -166,7 +183,7 @@
         // Receive a message from websocket server
         // Admin: Map ID to name & assigned questions and answers,
         // Establish websocket connection
-        
+          console.log("running server")
           socket = new WebSocket("wss://ws-server-template.debbiew27.repl.co", "very-good-protocol");
           socket.onmessage = function(message) {
             console.log("RECIEVED DATA: " + message.data)

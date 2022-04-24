@@ -48,8 +48,9 @@ def add_player(request, username="DefaultUsername"):
         query.answer = data["answer"]
         query.save()
     return HttpResponse(True)
-  else:
+  elif request.method == "GET":
     # GET request
+    print("request: ", request)
     # fetch all of the players in one go, to be used when running the game
     all_players = []
     try:
@@ -66,6 +67,16 @@ def add_player(request, username="DefaultUsername"):
     return JsonResponse({
       "players": all_players
     })
+  else :
+    print("making delete call")
+    try:
+      Player.objects.all().delete()
+      Question.objects.all().delete()
+      populate_database()
+    except:
+      print("ERROR! COULDN'T DELETE ALL PLAYERS IN THE DATABASE")
+      pass
+    return HttpResponse(True)
 
 # icebreaker/animalQuestion
 # Question -> JSON (Question: Do you like cats)
