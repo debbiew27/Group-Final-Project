@@ -84,7 +84,7 @@
       questionsElement.style.display = 'none';
       document.getElementById("waitGameStart").style.display = 'none';  
       
-      var socket;
+      var socket = null;
       var username;
 
       function clearButtons() {
@@ -171,7 +171,8 @@
               endingScreenElement.style.display = 'block';
               
             } else if(splitMessage[0] == "RESTART"){
-              window.location.reload();
+              socket.close();
+              window.location.replace("https://Group-Final-Project-with-P4-Starter-Code-UTHCI-1.uthci.repl.co")
             }else {
               console.log("RECIEVED WEIRD MESSAGE FROM SERVER: ")
               console.log(splitMessage)
@@ -181,6 +182,7 @@
 
       $('#food').on("click", function(event) {
         username = $('#userName').val();
+        console.log("sending food")
         socket.send("U_"+ username + "_Food");
         surveyElement.style.display = 'none';
         questionsElement.style.display = 'block';
@@ -189,6 +191,7 @@
       
       $('#animals').on("click", function(event) {
         username = $('#userName').val()
+        console.log("sending animal")
         socket.send("U_"+$('#userName').val() + "_Animals");
         surveyElement.style.display = 'none';  
         questionsElement.style.display = 'block';
@@ -197,6 +200,7 @@
       
       $('#travel').on("click", function(event) {
         username = $('#userName').val()
+        console.log("sending travel")
         socket.send("U_"+$('#userName').val() + "_Travel");
         surveyElement.style.display = 'none'; 
         questionsElement.style.display = 'block';  

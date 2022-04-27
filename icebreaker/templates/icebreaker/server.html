@@ -78,12 +78,12 @@
         })
       })
 
-      function restartGame(){
+      function restartGame() {
         console.log("calling restart")
         // reset the states
         socket.send("RESTART");
         socket.close();
-        window.location.reload();
+        window.location.replace("https://Group-Final-Project-with-P4-Starter-Code-UTHCI-1.uthci.repl.co")
       }
       
       $('#nextRound').on("click", function(event) {

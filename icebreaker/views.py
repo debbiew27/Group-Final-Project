@@ -78,22 +78,22 @@ def add_player(request, username="DefaultUsername"):
       pass
     return HttpResponse(True)
 
-# icebreaker/animalQuestion
-# Question -> JSON (Question: Do you like cats)
-def question(request):
-  if request.GET:
-    data = json.loads(request.body.decode('UTF-8'))
-    requested_topic = data["topic"]
+# # icebreaker/animalQuestion
+# # Question -> JSON (Question: Do you like cats)
+# def question(request):
+#   if request.GET:
+#     data = json.loads(request.body.decode('UTF-8'))
+#     requested_topic = data["topic"]
 
-    if(Question.objects.filter(topic = requested_topic).exists()):
-      # TODO maybe make random later
-      query = Question.objects.filter(topic = requested_topic, used=False).last() 
+#     if(Question.objects.filter(topic = requested_topic).exists()):
+#       # TODO maybe make random later
+#       query = Question.objects.filter(topic = requested_topic, used=False).last() 
 
-      data = query.question
-      query.used = True
-      query.save()
+#       data = query.question
+#       query.used = True
+#       query.save()
       
-      # how to define endpoint?
+#       # how to define endpoint?
 
 
 def populate_database():
