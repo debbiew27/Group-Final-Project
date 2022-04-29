@@ -185,4 +185,42 @@ body {
   justify-content: center;
 }
 
+#showCorrectAnswer h1 {
+  color:black ;
+  text-align: center;
+  font-size: 4vw;
+}
+
+#correctAnswer {
+  text-align:center;
+  font-size:3vw;
+  color: white;
+  font-weight: bold;
+}
+
+#currentLeaderboard {
+  font-size:2vw;
+  color: white;
+  font-weight: bold;
+}
+
+#endingScreen h1 {
+  color:black ;
+  text-align: center;
+  font-size: 4vw;
+}
+
+#finalLeaderboard{
+  font-size:2vw;
+  color: white;
+  font-weight: bold;
+}
+
+/* #nextRound {
+  background-color: var(--button-color);
+  float: right;
+} */
+
+
+
 /* ******************************** */

@@ -33,20 +33,32 @@
       width: auto;"></div>
     <div id = "candidates" style = "display: flex; justify-content: center"></div>
   </div>
-  
-  <div id = "showCorrectAnswer" style="color: white" class="container">
-    <h1 style="color: white">The correct answer was:</h1>
-    <div id = "correctAnswer" style="color: white"></div>
-    <h1 style="color: white">Current Leaderboard:</h1>
-    <div id = "currentLeaderboard" style="color: white"></div>
-    <button id="nextRound"> Next Round </button>
+
+  <div id = "showCorrectAnswer"  class="container">
+      <div class="card" style="margin-top: 25px">
+        <h1> SCOREBOARD </h1>
+      </div
+      <div class="card" style="background-color:#4281A4; width:100%">
+        <div id = "correctAnswer" ></div>
+        <table class="table">
+          <tbody id = "currentLeaderboard">  
+          </tbody>
+        </table>
+        <button id="nextRound" class = "bold-btn" style = "float: right; width: 10vw; height: 5vh; font-size: 1.5vw"> Next Round </button>
+      </div>
   </div>
   
-  <div id = "endingScreen" style="color: white" class="container">
-    <h1 style="color: white">Thanks for playing!</h1>
-    <h1 style="color: white">Final Scores:</h1>
-    <div id = "finalLeaderboard" style="color: white"></div>
-    <button id="playAgain"> Play Again </button>
+  <div id = "endingScreen" class="container">
+    <div class="card" style="margin-top: 25px">
+        <h1> Thanks For Playing! </h1>
+      </div
+      <div class="card" style="background-color:#4281A4; width:100%">
+        <table class="table">
+          <tbody id = "finalLeaderboard">  
+          </tbody>
+        </table>
+            <button id="playAgain" class = "bold-btn" style = "float: right; width: 10vw; height: 5vh; font-size: 1.5vw"> Play Again? </button>
+      </div>
   </div>
     
   <script>
@@ -236,7 +248,7 @@
           state.usersLeftGuessing = [...state.userhashes]
           console.log("RESULTING RESET OF USERHASHES: ")
           console.log(state.usersLeftGuessing)
-          document.getElementById('correctAnswer').textContent = correctAnswer;
+          document.getElementById('correctAnswer').textContent = correctAnswer + "✅";
           document.getElementById("game").style.display = 'none';
           $('body').css('background-color','var(--main-pg-bg)')
           document.getElementById("currentLeaderboard").textContent = ""
@@ -250,8 +262,9 @@
 
         for (const [key, value] of state.userScores.entries()) {
           console.log(key, value);
-          $(divname).append(state.userMap.get(key).username + ": " + value)
-          $(divname).append($("<br>"));
+          var username = state.userMap.get(key).username;
+          $(divname).append("<tr> <td>" + `${username}` + "</td> <td>" + `${value}` +  "</td> </tr>")
+          // $(divname).append($("<br>"));
         }
       }
 

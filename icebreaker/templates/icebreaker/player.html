@@ -9,6 +9,8 @@
   <link href="{% static 'coloring/vendors/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" type="text/css" />
   <link rel="stylesheet" type="text/css" href="{% static 'coloring/style.css' %}" />
 
+  <link href="https://fonts.googleapis.com/css2?family=Roboto" rel="stylesheet"> 
+
 </head>
 <body style = "background-color: #E4DFDA">
 
@@ -234,7 +236,7 @@
       })
 
       function updateQuestion(username) {
-        for(var i = 0; i < 10; i++) {
+        for(var i = 0; i < 3; i++) {
           $.ajax({
             type: "GET",
             url: "/icebreaker/"+ username + "/",
@@ -244,6 +246,7 @@
                 let current = all_players[j.toString()]["username"];
                 if(current === username) {
                   console.log("FOUND PERSON")
+                  alert("found person")
                   var question = (all_players[j]["question"])
                   myUserHash = (all_players[j]["userhash"])
                   document.getElementById('question').textContent = question;
