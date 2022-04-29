@@ -13,7 +13,6 @@
   
 </head>
 <body>
-
   <div id = "startPage" class="container">
     <div class="row">
         <h1 class="container title">ICEBREAKER</h1> 
@@ -28,7 +27,7 @@
   <div id = "game" class="container">
     <h1 id = "question"></h1>
     <div id = "answer"></div>
-    <div id = "candidates"></div>
+    <div id = "candidates" class = "row"></div>
   </div>
   
   <div id = "showCorrectAnswer" style="color: white" class="container">
@@ -64,6 +63,7 @@
       
       $('#startGame').on("click", function(event) {
         console.log("clicked Start game")
+        $('body').css('background-color','var(--game-bg)')
         $.ajax({
             type: "GET",
             url: "/icebreaker/default",
@@ -141,9 +141,10 @@
         state.currentTurn = shuffle(state.currentTurn);
   
         console.log("USERS: ", state.userMap)
+        $('body').css('background-color','var(--game-bg)')
         document.getElementById("startPage").style.display = 'none';
         // add all the player's name to the screen for guessing
-        state.players.forEach(element => $('#candidates').append(`<button> ${element} </button>`));
+        state.players.forEach(element => $('#candidates').append(`<button class="bold-btn landing-btn" style = "margin: 10px"> ${element} </button>`));
         document.getElementById("game").style.display = 'block';
 
 
@@ -233,7 +234,7 @@
           console.log(state.usersLeftGuessing)
           document.getElementById('correctAnswer').textContent = correctAnswer;
           document.getElementById("game").style.display = 'none';
-
+          $('body').css('background-color','var(--main-pg-bg)')
           document.getElementById("currentLeaderboard").textContent = ""
           updateScoreBoard("#currentLeaderboard")
           document.getElementById("showCorrectAnswer").style.display = 'block';

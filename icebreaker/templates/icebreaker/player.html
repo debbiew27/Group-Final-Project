@@ -19,7 +19,7 @@
           <h1 id="lobbyText">Nickname</h1> 
           <input class="inputBox" id="userName"></input>
           <div id="usernameError"></div>
-          <button style ="margin-left: 1.2em"class = "SubmitButton" id="goToSurvey"> START </button>
+          <button class = "SubmitButton" id="goToSurvey"> START </button>
     </div>
   </div>
   
@@ -45,23 +45,23 @@
 </div>
 
 <div id = "waitGameStart" class="container">
-    <h1 style= "text-align: center"> Thank you for your answer! Waiting for the game to start.</h1>
+    <h1 class = "display-text"> Thank you for your answer! Waiting for the game to start.</h1>
 </div>
 
 <div id = "guessButtons" class="container">
-    <div id = "candidates"></div>
+    <div id = "candidatesPlayer"></div>
 </div>
 
 <div id = "pretendToGuess" class="container">
-    <div id = "pretendMessage"> Your answer is being displayed on screen! Pretend that you're guessing! </div>
+    <div id = "pretendMessage" class = "display-text"> Shhhhhhhh! 🤫 Your answer is being displayed on screen! Pretend that you're guessing! </div>
 </div>
 
 <div id = "waitForOthersToGuess" class="container">
-    <div id = "guessMessage"> Waiting for others to finish guessing! </div>
+    <div id = "guessMessage" class = "display-text"> Waiting for others to finish guessing! </div>
 </div>
 
 <div id = "endingMessage" class="container">
-  <div id = "thanksForPlaying"> Thanks for playing! </div>
+  <div id = "thanksForPlaying" class = "display-text"> Thanks for playing! </div>
 </div>
   
   <script>
@@ -88,7 +88,7 @@
       var username;
 
       function clearButtons() {
-        let candidatesButtonsElement = document.getElementById("candidates");
+        let candidatesButtonsElement = document.getElementById("candidatesPlayer");
         while(candidatesButtonsElement.firstChild) {
           candidatesButtonsElement.removeChild(candidatesButtonsElement.lastChild);
         }
@@ -149,16 +149,18 @@
   
                 splitMessage.forEach(element => {
                   let newButton = document.createElement(`button`);
+                  newButton.setAttribute("id", "vote-btn");
                   newButton.textContent = element;
                   newButton.addEventListener("click", () => {
                     var guess = guessHeader + element;
-                    
+
+                    guessButtonsElement.style.display = 'none';
                     let waitForOthersToGuessElement = document.getElementById("waitForOthersToGuess");
                     waitForOthersToGuessElement.style.display = 'block';
                     
                     socket.send(guess)
                   })
-                  $('#candidates').append(newButton)
+                  $('#candidatesPlayer').append(newButton)
                 });
                 
               }
