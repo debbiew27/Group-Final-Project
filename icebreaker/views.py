@@ -5,14 +5,11 @@ from icebreaker.models import *
 from django.views.decorators.csrf import csrf_exempt
 import json
 
-populate = False
 def server(request):
   global populate
   # clear entire database first with questions?
   # then populate here
-  if(not populate):
-    populate_database()
-    populate = True
+  populate_database()
   return render(request, 'icebreaker/server.html')
 
 def player(request):
@@ -81,23 +78,24 @@ def add_player(request, username="DefaultUsername"):
 def populate_database():
   # Food 
   print("Populating Question")
-  Question(topic="Food",question="If you could eat anything in the world right now what would it be?",used=False).save()
-  Question(topic="Food",question="What’s your favorite cuisine/restaurant?",used=False).save()
-  Question(topic="Food",question="What would your last meal be?",used=False).save()
-  Question(topic="Food",question="Least favorite food?",used=False).save()
-  Question(topic="Food",question="You’re going on a date. What do you take your date to eat?",used=False).save()
-  Question(topic="Food",question="What meal reminds you most of home?",used=False).save()
-  Question(topic="Food",question="Does pineapple belong on pizza? If so, explain why?",used=False).save()
-  
-  # Animals
-  Question(topic="Animals",question="What is your favorite animal?",used=False).save()
-  Question(topic="Animals",question="What animal scares you the most?",used=False).save()
-  Question(topic="Animals",question="If you could have any animal in the world as a pet, what would it be?",used=False).save()
-  Question(topic="Animals",question="How many pets do you have?",used=False).save()
-  Question(topic="Animals",question="Do you have a pet? What's their name?",used=False).save()
-  
-  # Travel
-  Question(topic="Travel",question="Where is your dream vacation?",used=False).save()
-  Question(topic="Travel",question="Favorite vacation memory?",used=False).save()
-  Question(topic="Travel",question="How many countries have you travelled to",used=False).save()
-  Question(topic="Travel",question="How many road trips have you done? To where?",used=False).save()
+  if(not Question.objects.filter(topic = "Food").exists()):
+    Question(topic="Food",question="If you could eat anything in the world right now what would it be?",used=False).save()
+    Question(topic="Food",question="What’s your favorite cuisine/restaurant?",used=False).save()
+    Question(topic="Food",question="What would your last meal be?",used=False).save()
+    Question(topic="Food",question="Least favorite food?",used=False).save()
+    Question(topic="Food",question="You’re going on a date. What do you take your date to eat?",used=False).save()
+    Question(topic="Food",question="What meal reminds you most of home?",used=False).save()
+    Question(topic="Food",question="Does pineapple belong on pizza? If so, explain why?",used=False).save()
+    
+    # Animals
+    Question(topic="Animals",question="What is your favorite animal?",used=False).save()
+    Question(topic="Animals",question="What animal scares you the most?",used=False).save()
+    Question(topic="Animals",question="If you could have any animal in the world as a pet, what would it be?",used=False).save()
+    Question(topic="Animals",question="How many pets do you have?",used=False).save()
+    Question(topic="Animals",question="Do you have a pet? What's their name?",used=False).save()
+    
+    # Travel
+    Question(topic="Travel",question="Where is your dream vacation?",used=False).save()
+    Question(topic="Travel",question="Favorite vacation memory?",used=False).save()
+    Question(topic="Travel",question="How many countries have you travelled to",used=False).save()
+    Question(topic="Travel",question="How many road trips have you done? To where?",used=False).save()

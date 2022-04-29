@@ -173,4 +173,16 @@ body {
   display:block;
   color: var(--phone-bg);
 }
+
+.questionShowing{
+  display: flex;
+  color: black;
+  width: 75vw;
+  height: 25vh;
+  font-size: 3em;
+  font-weight: bold;
+  align-content: center;
+  justify-content: center;
+}
+
 /* ******************************** */

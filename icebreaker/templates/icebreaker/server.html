@@ -26,8 +26,12 @@
   
   <div id = "game" class="container">
     <h1 id = "question"></h1>
-    <div id = "answer"></div>
-    <div id = "candidates" class = "row"></div>
+    <div id = "answer" style = "height: 25vh;
+    font-size: 3em;
+    font-weight: bold;
+    text-align: center;
+      width: auto;"></div>
+    <div id = "candidates" style = "display: flex; justify-content: center"></div>
   </div>
   
   <div id = "showCorrectAnswer" style="color: white" class="container">
@@ -144,7 +148,7 @@
         $('body').css('background-color','var(--game-bg)')
         document.getElementById("startPage").style.display = 'none';
         // add all the player's name to the screen for guessing
-        state.players.forEach(element => $('#candidates').append(`<button class="bold-btn landing-btn" style = "margin: 10px"> ${element} </button>`));
+        state.players.forEach(element => $('#candidates').append(`<button class="bold-btn landing-btn col-2" style = "margin: 10px; display: auto"> ${element} </button>`));
         document.getElementById("game").style.display = 'block';
 
 
