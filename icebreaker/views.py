@@ -118,4 +118,4 @@ def populate_database():
   Question(topic="Travel",question="Where is your dream vacation?",used=False).save()
   Question(topic="Travel",question="Favorite vacation memory?",used=False).save()
   Question(topic="Travel",question="How many countries have you travelled to",used=False).save()
-  Question(topic="Travel",question="How many road trips have you done? To Where?",used=False).save()
+  Question(topic="Travel",question="How many road trips have you done? To where?",used=False).save()

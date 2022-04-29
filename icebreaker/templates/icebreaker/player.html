@@ -61,7 +61,7 @@
 </div>
 
 <div id = "endingMessage" class="container">
-  <div id = "thanksForPlaying"> Thanks for Playing! </div>
+  <div id = "thanksForPlaying"> Thanks for playing! </div>
 </div>
   
   <script>
@@ -232,7 +232,7 @@
       })
 
       function updateQuestion(username) {
-        for(var i = 0; i < 3; i++) {
+        for(var i = 0; i < 10; i++) {
           $.ajax({
             type: "GET",
             url: "/icebreaker/"+ username + "/",

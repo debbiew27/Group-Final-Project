@@ -6,9 +6,12 @@
 }
 
 /* ********** Index.html ********** */
-.landing {
+/* .container {
   background-color: var(--main-pg-bg);
-}
+  background-image: url("ice.jpg"); 
+  background-repeat: no-repeat;
+  background-size: cover;
+} */
 
 .bold-btn {
   background-color: var(--button-color);
@@ -18,12 +21,23 @@
   font-weight: bolder;
 }
 
+.player-btn {
+  font-family: 'Roboto';
+  font-style: italic;
+  font-weight: bolder;
+  width: 25vw;
+  height: 100%;
+  font-size: 4vw;
+  text-align: center;
+}
+
 .landing-btn {
   width: 25vw;
   height: 10vh;
   font-size: 2vw;
   justify-content: center;
   align-items: center;
+  margin: 0 auto;
 }
 /* ******************************** */
 
@@ -50,7 +64,7 @@
 
 
 #lobbyText {
-  font-size:2em;
+  font-size:5.7em;
   text-align:center;
   margin: auto;
   width: 50vw;
@@ -119,17 +133,22 @@ body {
 }
 
 .title {
-  font-size:12em;
-  color:var(--phone-bg);
+  font-size:6vw;
+  color: white;
+  display: flex;
+  justify-content: center;
 }
 
 #startGame {
   background-color: var(--button-color);
-  display:block;
-  width: 5vw
+  width: 25vw;
+  height: 10vh;
+  margin: 0 auto;
+  font-size: 2vw;
 }
 
 #new_players{
   display:block;
+  color: var(--phone-bg);
 }
 /* ******************************** */
