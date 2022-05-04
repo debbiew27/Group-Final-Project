@@ -4,6 +4,7 @@ from django.http import JsonResponse
 from icebreaker.models import *
 from django.views.decorators.csrf import csrf_exempt
 import json
+import random
 
 def server(request):
   global populate
@@ -18,6 +19,14 @@ def player(request):
 def index(request):
   return render(request, 'icebreaker/index.html')
 
+def randomQuestion(dataTopic):
+  qSet = Question.objects.filter(topic = dataTopic, used = False)
+  r = random.randrange(0, len(qSet)-1)
+  it = qSet.iterator()
+  for i in range(r):
+    it.next()
+  return it
+
 @csrf_exempt
 def add_player(request, username="DefaultUsername"):
   if request.POST:
@@ -31,7 +40,8 @@ def add_player(request, username="DefaultUsername"):
       if(Question.objects.filter(topic = data["topic"]).exists()):
         # TODO maybe make random later
         print('adding question of type: ', data["topic"])
-        query = Question.objects.filter(topic = data["topic"], used=False).last() 
+        #query = Question.objects.filter(topic = data["topic"], used=False).last() 
+        query = randomQuestion(data["topic"])
         print("question: ", query.question)
         query.used = True
         query.save()

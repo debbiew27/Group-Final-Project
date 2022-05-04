@@ -160,6 +160,7 @@
   
         console.log("USERS: ", state.userMap)
         $('body').css('background-color','var(--game-bg)')
+        $('body').css('color', 'white')
         document.getElementById("startPage").style.display = 'none';
         // add all the player's name to the screen for guessing
         state.players.forEach(element => $('#candidates').append(`<button class="bold-btn landing-btn col-2" style = "margin: 10px; display: auto"> ${element} </button>`));
@@ -220,6 +221,7 @@
 
       function updatePlayerTurn(userData) {
         // this is a guess from a player to a question on the screen
+        $('body').css('background-color','var(--game-bg)');
         let guess = userData[1]
         let userhash = userData[2]
 
@@ -251,6 +253,7 @@
           console.log(state.usersLeftGuessing)
           document.getElementById('correctAnswer').textContent = correctAnswer + "✅";
           document.getElementById("game").style.display = 'none';
+          $('body').css('background-color','var(--main-pg-bg)');
           document.getElementById("currentLeaderboard").textContent = ""
           updateScoreBoard("#currentLeaderboard")
           document.getElementById("showCorrectAnswer").style.display = 'block';
@@ -259,7 +262,6 @@
 
       function updateScoreBoard(divname) {
         console.log("DISPLAYING CURRENT SCOREBOARD")
-        $('body').css('background-color','var(--main-pg-bg)')
         for (const [key, value] of state.userScores.entries()) {
           console.log(key, value);
           var username = state.userMap.get(key).username;
@@ -278,6 +280,7 @@
           "userhash": userhash,
           "topic": topic
         };
+        
         console.log("ADDING PERSON TO LOBBY SCREEN:")
         console.log(username, topic, userhash)
         
