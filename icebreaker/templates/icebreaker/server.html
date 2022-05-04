@@ -17,7 +17,6 @@
     <div class="row">
         <h1 class="container title">ICEBREAKER</h1> 
          <div id="new_players" class = "container player-btn"></div>
-          <br></br>
         <div class = "container" style = "justify-content: center; display: flex">
         <button id="startGame" class = "bold-btn"> Start Game </button>
         <div class="alert alert-primary" role="alert">
@@ -185,7 +184,6 @@
 
       function sendRequestingAnswersMessage(currentPlayerShowing) {
         var message = "REQUESTINGANSWERS";
-        // TODO remove the person whose answer is on the screen from the usersLeftGuessing list so we don't wait for them
         const index = state.usersLeftGuessing.indexOf(currentPlayerShowing)
         if(index > -1) {
           console.log("SHOWING TARGET PERSON ON SCREEN. REMOVING " + currentPlayerShowing + " FROM USERS LEFT GUESSING")
@@ -289,6 +287,25 @@
           data: JSON.stringify(data_to_send),
           success: function (response) {
             console.log(response); 
+            $.ajax({
+              type: "GET",
+              url: "/icebreaker/"+ username + "/",
+              success: function (response) {
+                var all_players = response["players"]
+                for(var j = 0; j < all_players.length; j++) {
+                  let current = all_players[j.toString()]["username"];
+                  // alert("trying to find: " + current);
+                  if(current === username) {
+                    console.log("FOUND PERSON")
+                    // alert("found person")
+                    var question = (all_players[j]["question"])
+                    var userHash = (all_players[j]["userhash"])
+                    socket.send("FETCHEDQUESTION_" + question + "_" + userHash)
+                    break;
+                  }
+                } 
+              }
+          });
           }
         });
 

@@ -88,7 +88,7 @@
       
       var socket = null;
       var username;
-
+      var setQuestion = false;
       function clearButtons() {
         let candidatesButtonsElement = document.getElementById("candidatesPlayer");
         while(candidatesButtonsElement.firstChild) {
@@ -119,7 +119,12 @@
         socket.onmessage = function(message) {
             let splitMessage = message.data.split('_')
 
-            if(splitMessage[0] === "REQUESTINGANSWERS") {
+            if (splitMessage[0] == "FETCHEDQUESTION" && !setQuestion){
+              myUserHash = splitMessage[2];
+              let fetchedQuestion = splitMessage[1];
+              setQuestion = true;
+              document.getElementById('question').textContent = fetchedQuestion;
+            } else if (splitMessage[0] === "REQUESTINGANSWERS") {
               let waitGameStartElement = document.getElementById("waitGameStart");
               waitGameStartElement.style.display = 'none';
               let pretendElement = document.getElementById("pretendToGuess");
@@ -188,30 +193,24 @@
         username = $('#userName').val();
         console.log("sending food")
         socket.send("U_"+ username + "_Food");
-        // alert("updating question!");
         surveyElement.style.display = 'none';
         questionsElement.style.display = 'block';
-        updateQuestion(username);
       })
       
       $('#animals').on("click", function(event) {
         username = $('#userName').val()
         console.log("sending animal")
         socket.send("U_"+$('#userName').val() + "_Animals");
-        // alert("updating question!");
         surveyElement.style.display = 'none';  
         questionsElement.style.display = 'block';
-        updateQuestion(username)
       })
       
       $('#travel').on("click", function(event) {
         username = $('#userName').val()
         console.log("sending travel")
         socket.send("U_"+$('#userName').val() + "_Travel");
-        // alert("updating question!");
         surveyElement.style.display = 'none'; 
         questionsElement.style.display = 'block';  
-        updateQuestion(username)
       })
 
       $('#submitAnswer').on("click", function(event) {
@@ -237,31 +236,6 @@
           }
         });
       })
-
-      function updateQuestion(username) {
-        for(var i = 0; i < 10; i++) {
-          $.ajax({
-            type: "GET",
-            url: "/icebreaker/"+ username + "/",
-            success: function (response) {
-              var all_players = response["players"]
-              for(var j = 0; j < all_players.length; j++) {
-                let current = all_players[j.toString()]["username"];
-                // alert("trying to find: " + current);
-                if(current === username) {
-                  console.log("FOUND PERSON")
-                  // alert("found person")
-                  var question = (all_players[j]["question"])
-                  myUserHash = (all_players[j]["userhash"])
-                  document.getElementById('question').textContent = question;
-                  break;
-                }
-              } 
-            }
-          });
-        }
-        
-      }
   }
 
 </script>
