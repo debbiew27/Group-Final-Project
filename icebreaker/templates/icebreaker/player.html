@@ -116,8 +116,11 @@
 
         socket.onmessage = function(message) {
             let splitMessage = message.data.split('_')
-
-            if(splitMessage[0] === "REQUESTINGANSWERS") {
+            if(splitMessage[0] === "FETCHEDQUESTION") {
+              let fetchedQuestion = splitMessage[1];
+              myUserHash = splitMessage[2];
+              document.getElementById('question').textContent = fetchedQuestion;
+            } else if(splitMessage[0] === "REQUESTINGANSWERS") {
               let waitGameStartElement = document.getElementById("waitGameStart");
               waitGameStartElement.style.display = 'none';
               let pretendElement = document.getElementById("pretendToGuess");
@@ -186,7 +189,7 @@
         socket.send("U_"+ username + "_Food");
         surveyElement.style.display = 'none';
         questionsElement.style.display = 'block';
-        updateQuestion(username);
+        // updateQuestion(username);
       })
       
       $('#animals').on("click", function(event) {
@@ -195,7 +198,7 @@
         socket.send("U_"+$('#userName').val() + "_Animals");
         surveyElement.style.display = 'none';  
         questionsElement.style.display = 'block';
-        updateQuestion(username)
+        // updateQuestion(username)
       })
       
       $('#travel').on("click", function(event) {
@@ -204,7 +207,7 @@
         socket.send("U_"+$('#userName').val() + "_Travel");
         surveyElement.style.display = 'none'; 
         questionsElement.style.display = 'block';  
-        updateQuestion(username)
+        // updateQuestion(username)
       })
 
       $('#submitAnswer').on("click", function(event) {
@@ -231,28 +234,28 @@
         });
       })
 
-      function updateQuestion(username) {
-        for(var i = 0; i < 3; i++) {
-          $.ajax({
-            type: "GET",
-            url: "/icebreaker/"+ username + "/",
-            success: function (response) {
-              var all_players = response["players"]
-              for(var j = 0; j < all_players.length; j++) {
-                let current = all_players[j.toString()]["username"];
-                if(current === username) {
-                  console.log("FOUND PERSON")
-                  var question = (all_players[j]["question"])
-                  myUserHash = (all_players[j]["userhash"])
-                  document.getElementById('question').textContent = question;
-                  break;
-                }
-              } 
-            }
-          });
-        }
+      // function updateQuestion(username) {
+      //   for(var i = 0; i < 3; i++) {
+      //     $.ajax({
+      //       type: "GET",
+      //       url: "/icebreaker/"+ username + "/",
+      //       success: function (response) {
+      //         var all_players = response["players"]
+      //         for(var j = 0; j < all_players.length; j++) {
+      //           let current = all_players[j.toString()]["username"];
+      //           if(current === username) {
+      //             console.log("FOUND PERSON")
+      //             var question = (all_players[j]["question"])
+      //             myUserHash = (all_players[j]["userhash"])
+      //             document.getElementById('question').textContent = question;
+      //             break;
+      //           }
+      //         } 
+      //       }
+      //     });
+      //   }
         
-      }
+      // }
   }
 
 </script>

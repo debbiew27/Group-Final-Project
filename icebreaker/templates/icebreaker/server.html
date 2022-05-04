@@ -163,7 +163,7 @@
 
       function sendRequestingAnswersMessage(currentPlayerShowing) {
         var message = "REQUESTINGANSWERS";
-        // TODO remove the person whose answer is on the screen from the usersLeftGuessing list so we don't wait for them
+
         const index = state.usersLeftGuessing.indexOf(currentPlayerShowing)
         if(index > -1) {
           console.log("SHOWING TARGET PERSON ON SCREEN. REMOVING " + currentPlayerShowing + " FROM USERS LEFT GUESSING")
@@ -191,6 +191,7 @@
             console.log(userData)
             if(userData[0] === "U"){
               updateLobbyWithPlayerNames(userData)
+              
             }
             if(userData[0] === "A") {
               updatePlayerTurn(userData)
@@ -266,7 +267,25 @@
           url: "/icebreaker/"+ username + "/",
           data: JSON.stringify(data_to_send),
           success: function (response) {
-            console.log(response); 
+            console.log(response);
+            $.ajax({
+              type: "GET",
+              url: "/icebreaker/"+ username + "/",
+              success: function (response) {
+                var all_players = response["players"]
+                for(var j = 0; j < all_players.length; j++) {
+                  let current = all_players[j.toString()]["username"];
+                  if(current === username) {
+                    console.log("FOUND PERSON IN LOBBY SIDE");
+                    var question = (all_players[j]["question"])
+                    var userHash = (all_players[j]["userhash"])
+                    var message = "FETCHEDQUESTION_" + question + "_" + userHash;
+                    socket.send(message);
+                    break;
+                  }
+                } 
+              }
+          });
           }
         });
 
