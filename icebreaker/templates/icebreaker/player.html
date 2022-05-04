@@ -188,6 +188,7 @@
         username = $('#userName').val();
         console.log("sending food")
         socket.send("U_"+ username + "_Food");
+        // alert("updating question!");
         surveyElement.style.display = 'none';
         questionsElement.style.display = 'block';
         updateQuestion(username);
@@ -197,6 +198,7 @@
         username = $('#userName').val()
         console.log("sending animal")
         socket.send("U_"+$('#userName').val() + "_Animals");
+        // alert("updating question!");
         surveyElement.style.display = 'none';  
         questionsElement.style.display = 'block';
         updateQuestion(username)
@@ -206,6 +208,7 @@
         username = $('#userName').val()
         console.log("sending travel")
         socket.send("U_"+$('#userName').val() + "_Travel");
+        // alert("updating question!");
         surveyElement.style.display = 'none'; 
         questionsElement.style.display = 'block';  
         updateQuestion(username)
@@ -236,7 +239,7 @@
       })
 
       function updateQuestion(username) {
-        for(var i = 0; i < 3; i++) {
+        for(var i = 0; i < 10; i++) {
           $.ajax({
             type: "GET",
             url: "/icebreaker/"+ username + "/",
@@ -244,9 +247,10 @@
               var all_players = response["players"]
               for(var j = 0; j < all_players.length; j++) {
                 let current = all_players[j.toString()]["username"];
+                // alert("trying to find: " + current);
                 if(current === username) {
                   console.log("FOUND PERSON")
-                  alert("found person")
+                  // alert("found person")
                   var question = (all_players[j]["question"])
                   myUserHash = (all_players[j]["userhash"])
                   document.getElementById('question').textContent = question;

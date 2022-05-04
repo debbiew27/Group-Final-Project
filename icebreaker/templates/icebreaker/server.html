@@ -20,8 +20,11 @@
           <br></br>
         <div class = "container" style = "justify-content: center; display: flex">
         <button id="startGame" class = "bold-btn"> Start Game </button>
+        <div class="alert alert-primary" role="alert">
+          Check that everyone in your party has finished answering their question before clicking Start Game!
         </div>
-  </div>
+        </div>
+    </div>
   </div>
   
   <div id = "game" class="container">
@@ -250,7 +253,6 @@
           console.log(state.usersLeftGuessing)
           document.getElementById('correctAnswer').textContent = correctAnswer + "✅";
           document.getElementById("game").style.display = 'none';
-          $('body').css('background-color','var(--main-pg-bg)')
           document.getElementById("currentLeaderboard").textContent = ""
           updateScoreBoard("#currentLeaderboard")
           document.getElementById("showCorrectAnswer").style.display = 'block';
@@ -259,7 +261,7 @@
 
       function updateScoreBoard(divname) {
         console.log("DISPLAYING CURRENT SCOREBOARD")
-
+        $('body').css('background-color','var(--main-pg-bg)')
         for (const [key, value] of state.userScores.entries()) {
           console.log(key, value);
           var username = state.userMap.get(key).username;

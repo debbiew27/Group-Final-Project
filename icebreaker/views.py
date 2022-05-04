@@ -79,23 +79,26 @@ def populate_database():
   # Food 
   print("Populating Question")
   if(not Question.objects.filter(topic = "Food").exists()):
-    Question(topic="Food",question="If you could eat anything in the world right now what would it be?",used=False).save()
+    Question(topic="Food",question="If you could eat anything in the world right now, what would it be?",used=False).save()
     Question(topic="Food",question="What’s your favorite cuisine/restaurant?",used=False).save()
     Question(topic="Food",question="What would your last meal be?",used=False).save()
-    Question(topic="Food",question="Least favorite food?",used=False).save()
-    Question(topic="Food",question="You’re going on a date. What do you take your date to eat?",used=False).save()
+    # Question(topic="Food",question="Least favorite food?",used=False).save()
+    Question(topic="Food",question="Where is your ideal date night eating spot?",used=False).save()
     Question(topic="Food",question="What meal reminds you most of home?",used=False).save()
-    Question(topic="Food",question="Does pineapple belong on pizza? If so, explain why?",used=False).save()
+    Question(topic="Food",question="Which is better? A picnic in the park or a meal in a restaurant? Why?",used=False).save()
+    Question(topic="Food",question="What is the most USELESS tool in the kitchen?",used=False).save()
     
     # Animals
     Question(topic="Animals",question="What is your favorite animal?",used=False).save()
-    Question(topic="Animals",question="What animal scares you the most?",used=False).save()
     Question(topic="Animals",question="If you could have any animal in the world as a pet, what would it be?",used=False).save()
-    Question(topic="Animals",question="How many pets do you have?",used=False).save()
-    Question(topic="Animals",question="Do you have a pet? What's their name?",used=False).save()
+    Question(topic="Animals",question="How many pets do you have? What are they?",used=False).save()
+    Question(topic="Animals",question="What animal scares you the most? Why?",used=False).save()
     
     # Travel
     Question(topic="Travel",question="Where is your dream vacation?",used=False).save()
-    Question(topic="Travel",question="Favorite vacation memory?",used=False).save()
-    Question(topic="Travel",question="How many countries have you travelled to",used=False).save()
+    Question(topic="Travel",question="How many countries have you travelled to?",used=False).save()
     Question(topic="Travel",question="How many road trips have you done? To where?",used=False).save()
+    Question(topic="Travel",question="Favorite vacation memory?",used=False).save()
+    Question(topic="Travel",question="If you're headed out of state, what's your preferred method of travel?",used=False).save()
+    Question(topic="Travel",question="Any entertaining airport TSA stories?",used=False).save()
+    Question(topic="Travel",question="What are your opinions on American public transit?",used=False).save()
