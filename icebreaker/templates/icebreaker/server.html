@@ -26,9 +26,10 @@
     </div>
   </div>
   
-  <div id = "game" class="container">
-    <h1 id = "question"></h1>
-    <div id = "answer" style = "height: 25vh;
+  <div style ="color:white"id = "game" class="container">
+<!--     <h1 class = "questionServer" id = "question"></h1> -->
+    <h1 id = "questionServer"></h1>
+    <div id = "serverAnswer" style = "height: 25vh;
     font-size: 3em;
     font-weight: bold;
     text-align: center;
@@ -40,7 +41,7 @@
       <div class="card" style="margin-top: 25px">
         <h1> SCOREBOARD </h1>
       </div
-      <div class="card" style="background-color:#4281A4; width:100%">
+      <div class="card" style="background-color:#2F3D7B; width:100%">
         <div id = "correctAnswer" ></div>
         <table class="table">
           <tbody id = "currentLeaderboard">  
@@ -120,8 +121,8 @@
         } else {
           let currentPlayerShowing = state.currentTurn[state.currentTurn.length - 1];
 
-          document.getElementById('question').textContent = state.userMap.get(currentPlayerShowing).question
-          document.getElementById('answer').textContent = state.userMap.get(currentPlayerShowing).answer
+          document.getElementById('questionServer').textContent = state.userMap.get(currentPlayerShowing).question
+          document.getElementById('serverAnswer').textContent = state.userMap.get(currentPlayerShowing).answer
   
           document.getElementById("showCorrectAnswer").style.display = 'none';
           document.getElementById("game").style.display = 'block';
@@ -159,8 +160,8 @@
         state.currentTurn = shuffle(state.currentTurn);
   
         console.log("USERS: ", state.userMap)
-        $('body').css('background-color','var(--game-bg)')
-        $('body').css('color', 'white')
+        // $('body').css('background-color','var(--game-bg)')
+        // $('body').css('color', 'white')
         document.getElementById("startPage").style.display = 'none';
         // add all the player's name to the screen for guessing
         state.players.forEach(element => $('#candidates').append(`<button class="bold-btn landing-btn col-2" style = "margin: 10px; display: auto"> ${element} </button>`));
@@ -177,8 +178,8 @@
         console.log("FETCHING THIS USER:")
         console.log(currentPlayerShowing)
 
-        document.getElementById('question').textContent = state.userMap.get(currentPlayerShowing).question
-        document.getElementById('answer').textContent = state.userMap.get(currentPlayerShowing).answer
+        document.getElementById('questionServer').textContent = state.userMap.get(currentPlayerShowing).question
+        document.getElementById('serverAnswer').textContent = state.userMap.get(currentPlayerShowing).answer
 
         sendRequestingAnswersMessage(currentPlayerShowing)
       }
@@ -221,7 +222,7 @@
 
       function updatePlayerTurn(userData) {
         // this is a guess from a player to a question on the screen
-        $('body').css('background-color','var(--game-bg)');
+        // $('body').css('background-color','var(--game-bg)');
         let guess = userData[1]
         let userhash = userData[2]
 
@@ -253,7 +254,7 @@
           console.log(state.usersLeftGuessing)
           document.getElementById('correctAnswer').textContent = correctAnswer + "✅";
           document.getElementById("game").style.display = 'none';
-          $('body').css('background-color','var(--main-pg-bg)');
+          // $('body').css('background-color','var(--main-pg-bg)');
           document.getElementById("currentLeaderboard").textContent = ""
           updateScoreBoard("#currentLeaderboard")
           document.getElementById("showCorrectAnswer").style.display = 'block';

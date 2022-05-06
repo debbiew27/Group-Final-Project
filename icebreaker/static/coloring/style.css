@@ -2,7 +2,7 @@
   --button-color: #C1666B;
   --main-pg-bg: #2F3D7B;
   --phone-bg: #E4DFDA;
-  --game-bg: #4281A4;
+  --game-bg: #2F3D7B;
 }
 
 /* ********** Index.html ********** */
@@ -90,12 +90,12 @@
 }
 
 
-#question {
+#questionServer {
   margin-top: 14vh;
   margin-bottom: 5vh;
   font-size: 4.5em;
   text-align:center;
-  color: black;
+  color: white;
   font-weight: bold;
 }
 
@@ -117,6 +117,15 @@
   width: 75vw;
   height: 25vh;
   font-size:3em;
+  font-weight: bold;
+}
+
+#question{
+  margin-top: 14vh;
+  margin-bottom: 5vh;
+  font-size: 4.5em;
+  text-align:center;
+  color: black;
   font-weight: bold;
 }
 
@@ -152,6 +161,24 @@
 /* ********* Server.html ********** */
 body {
   background-color: var(--main-pg-bg);
+}
+
+#serverAnswer{
+  display:block;
+  color:white;
+  width: 75vw;
+  height: 25vh;
+  font-size:3em;
+  font-weight: bold;
+}
+
+.questionServer {
+  margin-top: 14vh;
+  margin-bottom: 5vh;
+  font-size: 4.5em;
+  text-align:center;
+  color: white;
+  font-weight: bold;
 }
 
 .title {
